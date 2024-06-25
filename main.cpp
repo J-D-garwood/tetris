@@ -2,12 +2,14 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "block.h"
+#include <string>
 //#include "Lblock.h"
 
 const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
 const int BOARD_WIDTH = 280; 
-//const int SPEED = 5;
+
+int spaces[10][18];
 
 // Move block sprite every 100 milliseconds
 const Uint32 MOVE_INTERVAL = 1000;
@@ -36,7 +38,7 @@ int main( int argc, char *argv[] )
 {
     SDL_Init( SDL_INIT_EVERYTHING );
 
-    SDL_Window *window = SDL_CreateWindow( "TETRIS", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_Window *window = SDL_CreateWindow( "poop", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if ( NULL == window )
@@ -45,36 +47,20 @@ int main( int argc, char *argv[] )
         return 1;
     }
 
+    for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 18; ++j) {
+            spaces[i][j] = 0; // or any other default value
+        }
+    }
+
     //L blocks
     Lblock firstL = Lblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    firstL.EstablishSouth();
-    all_L_blocks.push_back(firstL);
-
+    firstL.EstablishEast();
+    //firstL.EstablishNorth();
+    //firstL.EstablishWest();
+    //firstL.EstablishSouth();
 
     SDL_Rect board = { (WIDTH / 2 - BOARD_WIDTH / 2), 10, BOARD_WIDTH, BOARD_HEIGHT };
-
-/*
-        for (int i = 0; i<all_L_blocks.size(); i++) {
-            if (all_blocks.size()>=all_L_blocks.size()*4) {
-                break;
-            }
-            Lblock thisL = all_L_blocks[i];
-            block A = block(thisL.x, thisL.y, thisL.stopped);
-            block B = block(thisL.x_b2, thisL.y_b2, thisL.stopped);
-            block C = block(thisL.x_b3, thisL.y_b3, thisL.stopped);
-            block D = block(thisL.x_b4, thisL.y_b4, thisL.stopped);
-            all_blocks.push_back(A);
-            all_blocks.push_back(B);                    
-            all_blocks.push_back(C);            
-            all_blocks.push_back(D);            
-        }   */
-/*
-        for (int i = 0; i<all_blocks.size(); i++) {
-        block Block = all_blocks[i];
-        SDL_Rect rect = {Block.x, Block.y, Block.dim, Block.dim};
-        all_rects.push_back(rect);
-        }
-*/
     Uint32 lastMoveTime = 0;
 
 
@@ -112,21 +98,10 @@ int main( int argc, char *argv[] )
 
         Uint32 currentTime = SDL_GetTicks();
         if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
-            // Move the L rectangles
-            for (int i = 0; i<all_rects.size(); i++) {
-                if(all_rects[i].y+28!=BOARD_HEIGHT+10) {
-                    for (int k = 0; k<all_blocks.size(); k++) {
-                        if(all_rects[i].x == all_blocks[k].x && all_rects[i].y == all_blocks[k].y) {
-                            if (all_blocks[k].stopped) {
-                                all_rects[i].y+=28;
-                            }
-                        }
-                    }
-                } else {
-                }
+            firstL.checkpos();
+            firstL.moveDown();
             lastMoveTime = currentTime;
         }
-
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
 
@@ -145,13 +120,9 @@ int main( int argc, char *argv[] )
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
         //Drawing all L blocks
-        for (int i = 0; i<all_rects.size(); i++) {
-            SDL_Rect rect = all_rects[i];
-            SDL_RenderFillRect(renderer, &rect);
-        }
 
+        firstL.draw(renderer);
         SDL_RenderPresent(renderer);
-    }
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow( window );

@@ -1,12 +1,17 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <SDL2/SDL.h>
+
 class block{
 public:
     bool stopped;
     int dim = 28;
-    int x;
-    int y;
+    int x1;
+    int y1;
     block(int x_pos, int y_pos, bool stop = false) {
-        x = x_pos;
-        y = y_pos;
+        x1 = x_pos;
+        y1 = y_pos;
         stopped = stop;
     }
     void stopblock() {
@@ -17,100 +22,191 @@ public:
 class Lblock: public block {
   public:
     int highest_y;
-    int x_b2;
-    int y_b2;
-    int x_b3;
-    int y_b3;
-    int x_b4;
-    int y_b4;
+    int x2;
+    int y2;
+    int x3;
+    int y3;
+    int x4;
+    int y4;
     Lblock(int x, int y) : block(x, y) {}
+    void draw(SDL_Renderer *rend ) {
+        SDL_Rect A = {x1, y1, dim, dim};
+        SDL_Rect B = {x2, y2, dim, dim};
+        SDL_Rect C = {x3, y3, dim, dim};
+        SDL_Rect D = {x4, y4, dim, dim};
+        SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
+        SDL_RenderFillRect(rend, &A);
+        SDL_RenderFillRect(rend, &B);
+        SDL_RenderFillRect(rend, &C);
+        SDL_RenderFillRect(rend, &D);
+    }
+    int checkpos() {
+        if (highest_y+28==392+28*4+10) {
+            stopped = true;
+            return 1;
+        }
+        return 0;
+    }
+
+    void moveDown() {
+        if (!stopped) {
+            y1 +=dim;        
+            y2 +=dim;
+            y3 +=dim;
+            y4 +=dim;
+            highest_y+=dim;
+        }      
+    }
     void EstablishWest() {
-        x = x+28*3;
-        y = 10;
-        x_b2 = x+28;
-        y_b2 = y;
-        x_b3 = x+56;
-        y_b3 = y;
-        x_b4 = x_b3;
-        y_b4 = y+28;
-        highest_y = y+28;
+        x1 = x1+dim*4;
+        y1 = 10;
+        x2 = x1+dim;
+        y2 = 10;
+        x3 = x2+dim;
+        y3 = 10;
+        x4 = x3;
+        y4 = y3+dim;
+        highest_y = y4;
     }
     void EstablishEast() {
-        x = x+28*4;
-        y = 10;
-        x_b2 = x+28;
-        y_b2 = y;
-        x_b3 = x+56;
-        y_b3 = y;
-        x_b4 = x;
-        y_b4 = y-28;
-        highest_y = y_b4+28;
+        x1 = x1+dim*6;
+        y1 = 10;
+        x2 = x1-dim;
+        y2 = 10;
+        x3 = x2-dim;
+        y3 = 10;
+        x4 = x3;
+        y4 = y3-dim;
+        highest_y = y1;
     }
     void EstablishNorth() {
-        x = x+28*4;
-        y = 10;
-        x_b2 = x+28;
-        y_b2 = y;
-        x_b3 = x+28;
-        y_b3 = y-28;
-        x_b4 = x+28;
-        y_b4 = y-56;
-        highest_y = y+28;
+        x1 = x1+dim*5;
+        y1 = 10-2*dim;
+        x2 = x1;
+        y2 = 10-1*dim;
+        x3 = x2;
+        y3 = 10;
+        x4 = x3-dim;
+        y4 = 10;
+        highest_y = y4;
     }
     void EstablishSouth() {
-        x = x+28*4;
-        y = 10;
-        x_b2 = x+28;
-        y_b2 = y;
-        x_b3 = x;
-        y_b3 = y+28;
-        x_b4 = x;
-        y_b4 = y+56;
-        highest_y = y_b4+28;
+        x1 = x1+dim*4;
+        y1 = 10;
+        x2 = x1;
+        y2 = 10-dim;
+        x3 = x2;
+        y3 = 10-2*dim;
+        x4 = x3+dim;
+        y4 = y3;
+        highest_y = y1;
     }
-    /*
+
     //You could probably combine
     // the below functions by establishing 
     // a boolean param passed in (8 to 4 methods)
-    void EasttoSouthArrange() {
-        x = 
-        y = 
-        x_b2 =
-        y_b2 =
-        x_b3 =
-        y_b3 =
-        x_b4 =
-        y_b4 =
+    void EasttoSouthArrange(bool clockwise) {
+        // south to east
+        if(clockwise) {
+            x1-=dim;
+            y1+=dim; 
+            x2 = x2;
+            y2 = y2;
+            x3 += dim;
+            y3 -= dim;
+            x4 += 2*dim; 
+            y4 = y4;
+            highest_y = y1;
+        } 
+        //south to east
+        else {
+            x1+=dim;
+            y1-=dim; 
+            x2 = x2;
+            y2 = y2;
+            x3 -= dim;
+            y3 += dim;
+            x4 -= 2*dim; 
+            y4 = y4;
+            highest_y = y1;
+        }
     }
-    void NorthtoEastArrange() {
-        x = 
-        y = 
-        x_b2 =
-        y_b2 =
-        x_b3 =
-        y_b3 =
-        x_b4 =
-        y_b4 =
+    void NorthtoEastArrange(bool clockwise) {
+        // north to east
+        if(!clockwise) {
+            x1=x1;
+            y1+=2*dim; 
+            x2 -= dim;
+            y2 += dim;
+            x3 -= 2*dim;
+            y3 = y3;
+            x4 -= dim; 
+            y4 -= dim;
+            highest_y = y1;
+        } 
+        //east to north
+        else {
+            x1=x1;
+            y1-=2*dim; 
+            x2 += dim;
+            y2 -= dim;
+            x3 += 2*dim;
+            y3 = y3;
+            x4 += dim; 
+            y4 += dim;
+            highest_y = y4;
+        }
     }
-    void WesttoNorthArrange() {
-        x = 
-        y = 
-        x_b2 =
-        y_b2 =
-        x_b3 =
-        y_b3 =
-        x_b4 =
-        y_b4 =
+    void WesttoNorthArrange(bool clockwise) {
+        // north to east
+        if(clockwise) {
+            x1+=2*dim;
+            y1-=dim; 
+            x2 += dim;
+            y2 = y2;
+            x3 = x3;
+            y3 += dim;
+            x4 -= dim; 
+            y4 = y4;
+            highest_y = y4;
+        } 
+        //east to north
+        else {
+            x1-=2*dim;
+            y1+=dim; 
+            x2 -= dim;
+            y2 = y2;
+            x3 = x3;
+            y3 -= dim;
+            x4 += dim; 
+            y4 = y4;
+            highest_y = y4;
+        }
     }
-    void SouthtoWestArrange() {
-        x = 
-        y = 
-        x_b2 =
-        y_b2 =
-        x_b3 =
-        y_b3 =
-        x_b4 =
-        y_b4 =
+    void SouthtoWestArrange(bool clockwise) {
+        // north to east
+        if(!clockwise) {
+            x1-=dim;
+            y1-=2*dim; 
+            x2 = x2;
+            y2 -= dim;
+            x3 += dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 += dim;
+            highest_y = y4;
+        } 
+        //east to north
+        else {
+            x1+=dim;
+            y1+=2*dim; 
+            x2 = x2;
+            y2 += dim;
+            x3 -= dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 -= dim;
+            highest_y = y1;
+        }
     }
-    */
 };
