@@ -73,9 +73,324 @@ public:
     }
 };
 
-class Lblock: public block {
+class Tblock: public block {
   public:
-    Lblock(int x, int y) : block(x, y) {}
+    Tblock(int x, int y) : block(x, y) {}
+    void EstablishNorth() {
+        x1 = x1+dim*5;
+        y1 = 10;
+        x2 = x1-dim;
+        y2 = 10+dim;
+        x3 = x1;
+        y3 = 10+dim;
+        x4 = x3+dim;
+        y4 = 10+dim;
+        highest_y = y4;
+    }
+    void EstablishEast() {
+        x1 = x1+dim*6;
+        y1 = 10;
+        x2 = x1-dim;
+        y2 = 10-dim;
+        x3 = x2;
+        y3 = 10;
+        x4 = x3;
+        y4 = 10+dim;
+        highest_y = y4;
+    }
+    void EstablishWest() {
+        x1 = x1+dim*6;
+        y1 = 10;
+        x2 = x1+dim;
+        y2 = 10-dim;
+        x3 = x2;
+        y3 = 10;
+        x4 = x3;
+        y4 = 10+dim;
+        highest_y = y2;
+    }
+    void EstablishSouth() {
+        x1 = x1+dim*5;
+        y1 = 10+dim;
+        x2 = x1+dim;
+        y2 = 10;
+        x3 = x1;
+        y3 = 10;
+        x4 = x3-dim;
+        y4 = 10;
+        highest_y = y1;
+    }
+
+    //You could probably combine
+    // the below functions by establishing 
+    // a boolean param passed in (8 to 4 methods)
+    void EasttoSouthArrange(bool clockwise) {
+        // south to east
+        if(clockwise) {
+            x1-=dim;
+            y1+=dim; 
+            x2 = x2;
+            y2 = y2;
+            x3 += dim;
+            y3 -= dim;
+            x4 += 2*dim; 
+            y4 = y4;
+            highest_y = y1;
+        } 
+        //south to east
+        else {
+            x1+=dim;
+            y1-=dim; 
+            x2 = x2;
+            y2 = y2;
+            x3 -= dim;
+            y3 += dim;
+            x4 -= 2*dim; 
+            y4 = y4;
+            highest_y = y1;
+        }
+    }
+    void NorthtoEastArrange(bool clockwise) {
+        // north to east
+        if(!clockwise) {
+            x1=x1;
+            y1+=2*dim; 
+            x2 -= dim;
+            y2 += dim;
+            x3 -= 2*dim;
+            y3 = y3;
+            x4 -= dim; 
+            y4 -= dim;
+            highest_y = y1;
+        } 
+        //east to north
+        else {
+            x1=x1;
+            y1-=2*dim; 
+            x2 += dim;
+            y2 -= dim;
+            x3 += 2*dim;
+            y3 = y3;
+            x4 += dim; 
+            y4 += dim;
+            highest_y = y4;
+        }
+    }
+    void WesttoNorthArrange(bool clockwise) {
+        // north to east
+        if(clockwise) {
+            x1+=2*dim;
+            y1-=dim; 
+            x2 += dim;
+            y2 = y2;
+            x3 = x3;
+            y3 += dim;
+            x4 -= dim; 
+            y4 = y4;
+            highest_y = y4;
+        } 
+        //east to north
+        else {
+            x1-=2*dim;
+            y1+=dim; 
+            x2 -= dim;
+            y2 = y2;
+            x3 = x3;
+            y3 -= dim;
+            x4 += dim; 
+            y4 = y4;
+            highest_y = y4;
+        }
+    }
+    void SouthtoWestArrange(bool clockwise) {
+        // north to east
+        if(!clockwise) {
+            x1-=dim;
+            y1-=2*dim; 
+            x2 = x2;
+            y2 -= dim;
+            x3 += dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 += dim;
+            highest_y = y4;
+        } 
+        //east to north
+        else {
+            x1+=dim;
+            y1+=2*dim; 
+            x2 = x2;
+            y2 += dim;
+            x3 -= dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 -= dim;
+            highest_y = y1;
+        }
+    }
+};
+
+class LRblock: public block {
+  public:
+    LRblock(int x, int y) : block(x, y) {}
+    void EstablishWest() {
+        x1 = x1+dim*4;
+        y1 = 10;
+        x2 = x1+dim;
+        y2 = 10;
+        x3 = x2+dim;
+        y3 = 10;
+        x4 = x3;
+        y4 = y3-dim;
+        highest_y = y3;
+    }
+    void EstablishEast() {
+        x1 = x1+dim*6;
+        y1 = 10;
+        x2 = x1-dim;
+        y2 = 10;
+        x3 = x2-dim;
+        y3 = 10;
+        x4 = x3;
+        y4 = y3+dim;
+        highest_y = y4;
+    }
+    void EstablishNorth() {
+        x1 = x1+dim*5;
+        y1 = 10-2*dim;
+        x2 = x1;
+        y2 = 10-1*dim;
+        x3 = x2;
+        y3 = 10;
+        x4 = x3+dim;
+        y4 = 10;
+        highest_y = y4;
+    }
+    void EstablishSouth() {
+        x1 = x1+dim*4;
+        y1 = 10;
+        x2 = x1;
+        y2 = 10-dim;
+        x3 = x2;
+        y3 = 10-2*dim;
+        x4 = x3-dim;
+        y4 = y3;
+        highest_y = y1;
+    }
+
+    //You could probably combine
+    // the below functions by establishing 
+    // a boolean param passed in (8 to 4 methods)
+    void EasttoSouthArrange(bool clockwise) {
+        // south to east
+        if(clockwise) {
+            x1-=dim;
+            y1+=dim; 
+            x2 = x2;
+            y2 = y2;
+            x3 += dim;
+            y3 -= dim;
+            x4 += 2*dim; 
+            y4 = y4;
+            highest_y = y1;
+        } 
+        //south to east
+        else {
+            x1+=dim;
+            y1-=dim; 
+            x2 = x2;
+            y2 = y2;
+            x3 -= dim;
+            y3 += dim;
+            x4 -= 2*dim; 
+            y4 = y4;
+            highest_y = y1;
+        }
+    }
+    void NorthtoEastArrange(bool clockwise) {
+        // north to east
+        if(!clockwise) {
+            x1=x1;
+            y1+=2*dim; 
+            x2 -= dim;
+            y2 += dim;
+            x3 -= 2*dim;
+            y3 = y3;
+            x4 -= dim; 
+            y4 -= dim;
+            highest_y = y1;
+        } 
+        //east to north
+        else {
+            x1=x1;
+            y1-=2*dim; 
+            x2 += dim;
+            y2 -= dim;
+            x3 += 2*dim;
+            y3 = y3;
+            x4 += dim; 
+            y4 += dim;
+            highest_y = y4;
+        }
+    }
+    void WesttoNorthArrange(bool clockwise) {
+        // north to east
+        if(clockwise) {
+            x1+=2*dim;
+            y1-=dim; 
+            x2 += dim;
+            y2 = y2;
+            x3 = x3;
+            y3 += dim;
+            x4 -= dim; 
+            y4 = y4;
+            highest_y = y4;
+        } 
+        //east to north
+        else {
+            x1-=2*dim;
+            y1+=dim; 
+            x2 -= dim;
+            y2 = y2;
+            x3 = x3;
+            y3 -= dim;
+            x4 += dim; 
+            y4 = y4;
+            highest_y = y4;
+        }
+    }
+    void SouthtoWestArrange(bool clockwise) {
+        // north to east
+        if(!clockwise) {
+            x1-=dim;
+            y1-=2*dim; 
+            x2 = x2;
+            y2 -= dim;
+            x3 += dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 += dim;
+            highest_y = y4;
+        } 
+        //east to north
+        else {
+            x1+=dim;
+            y1+=2*dim; 
+            x2 = x2;
+            y2 += dim;
+            x3 -= dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 -= dim;
+            highest_y = y1;
+        }
+    }
+};
+
+class LLblock: public block {
+
+  public:
+    LLblock(int x, int y) : block(x, y) {}
     void EstablishWest() {
         x1 = x1+dim*4;
         y1 = 10;

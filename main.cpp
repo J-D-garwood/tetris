@@ -5,7 +5,6 @@ using std::endl;
 #include <SDL2/SDL.h>
 #include "block.h"
 #include <string>
-//#include "Lblock.h"
 
 const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
@@ -60,7 +59,7 @@ std::vector<SDL_Rect> all_rects;
 std::vector<block> all_blocks;
 
 //L blocks
-std::vector<Lblock> all_L_blocks;
+std::vector<LLblock> all_L_blocks;
 
 //T blocks
 
@@ -89,13 +88,14 @@ int main( int argc, char *argv[] )
     }
     int SPACES[10][18] = {0};
     //L blocks
-    Lblock firstL = Lblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    Lblock secondL = Lblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    //firstL.EstablishEast();
-    //firstL.EstablishNorth();
-    secondL.EstablishNorth();
-    //firstL.EstablishWest();
-    firstL.EstablishSouth();
+    LRblock first = LRblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    Tblock second = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    //first.EstablishEast();
+    first.EstablishNorth();
+    second.EstablishWest();
+    //secondL.EstablishNorth();
+    //second.EstablishWest();
+    //firstL.EstablishSouth();
 
     SDL_Rect board = { (WIDTH / 2 - BOARD_WIDTH / 2), 10, BOARD_WIDTH, BOARD_HEIGHT };
     Uint32 lastMoveTime = 0;
@@ -135,18 +135,19 @@ int main( int argc, char *argv[] )
 
         Uint32 currentTime = SDL_GetTicks();
         if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
-            stoppingFlag = firstL.checkpos();
-            stoppingFlag2 = checkblockpos(SPACES, secondL);
+            stoppingFlag = first.checkpos();
+            second.checkpos();
+            stoppingFlag2 = checkblockpos(SPACES, second);
             if (stoppingFlag2) {
-                secondL.stopblock();
+                second.stopblock();
             }
             if (stoppingFlag) {
                 SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-                secondL.moveDown();
-                setSpaces(SPACES, firstL.x1, firstL.y1);
-                setSpaces(SPACES, firstL.x2, firstL.y2);
-                setSpaces(SPACES, firstL.x3, firstL.y3);
-                setSpaces(SPACES, firstL.x4, firstL.y4);
+                second.moveDown();
+                setSpaces(SPACES, first.x1, first.y1);
+                setSpaces(SPACES, first.x2, first.y2);
+                setSpaces(SPACES, first.x3, first.y3);
+                setSpaces(SPACES, first.x4, first.y4);
                 /*cout << firstL.x1 << " " << firstL.y1 << endl;
                 //cout << 5*28+160 << " " << 1*28+10 << endl;
                 cout << firstL.x2 << " " << firstL.y2 << endl;
@@ -165,7 +166,7 @@ int main( int argc, char *argv[] )
                 }
                 */
             }
-            firstL.moveDown();
+            first.moveDown();
             lastMoveTime = currentTime;  
         }
 
@@ -189,9 +190,9 @@ int main( int argc, char *argv[] )
         //Drawing all L blocks
 
         if (stoppingFlag) {
-            secondL.draw(renderer);
+            second.draw(renderer);
         }
-        firstL.draw(renderer);
+        first.draw(renderer);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyRenderer(renderer);
