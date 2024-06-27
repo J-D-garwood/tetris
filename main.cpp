@@ -39,8 +39,25 @@ bool checkblockpos(spaces& array, block b) {
         for (int j = 0; j < 18; ++j) {
             if (array[i][j]==1) {
                 if (i==x1_Update || i==x2_Update || i==x3_Update || i==x4_Update) {
-                    if (j-1==y1_Update || j-1==y2_Update || j-1==y3_Update || j-1==y4_Update) {
-                        return true;
+                    if (i==x1_Update) {
+                        if (j-1==y1_Update) {
+                            return true;
+                        }
+                    }
+                    if (i==x2_Update) {
+                        if (j-1==y2_Update) {
+                            return true;
+                        }
+                    }
+                    if (i==x3_Update) {
+                        if (j-1==y2_Update) {
+                            return true;
+                        }
+                    }
+                    if (i==x4_Update) {
+                        if (j-1==y2_Update) {
+                            return true;
+                        }
                     }
                 }   
             }
@@ -49,7 +66,7 @@ bool checkblockpos(spaces& array, block b) {
     return false;
 }
 // Move block sprite every 100 milliseconds
-const Uint32 MOVE_INTERVAL = 300;
+const Uint32 MOVE_INTERVAL = 200;
 
 //taken positions [x, y]
 //std::vector<std::array<int, 2>> taken_spaces;
@@ -88,10 +105,10 @@ int main( int argc, char *argv[] )
     }
     int SPACES[10][18] = {0};
     //L blocks
-    LRblock first = LRblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    Tblock first = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
     Tblock second = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    //first.EstablishEast();
-    first.EstablishNorth();
+    first.EstablishEast();
+    //first.EstablishNorth();
     second.EstablishWest();
     //secondL.EstablishNorth();
     //second.EstablishWest();
