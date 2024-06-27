@@ -9,6 +9,15 @@ public:
     int dim = 28;
     int x1;
     int y1;
+    //unused atts
+    int highest_y;
+    int x2;
+    int y2;
+    int x3;
+    int y3;
+    int x4;
+    int y4;
+    using spaces =  int[10][18];
     block(int x_pos, int y_pos, bool stop = false) {
         x1 = x_pos;
         y1 = y_pos;
@@ -17,29 +26,6 @@ public:
     void stopblock() {
         stopped = true;
     }
-};
-
-class Lblock: public block {
-  public:
-    int highest_y;
-    int x2;
-    int y2;
-    int x3;
-    int y3;
-    int x4;
-    int y4;
-    Lblock(int x, int y) : block(x, y) {}
-    void draw(SDL_Renderer *rend ) {
-        SDL_Rect A = {x1, y1, dim, dim};
-        SDL_Rect B = {x2, y2, dim, dim};
-        SDL_Rect C = {x3, y3, dim, dim};
-        SDL_Rect D = {x4, y4, dim, dim};
-        SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
-        SDL_RenderFillRect(rend, &A);
-        SDL_RenderFillRect(rend, &B);
-        SDL_RenderFillRect(rend, &C);
-        SDL_RenderFillRect(rend, &D);
-    }
     int checkpos() {
         if (highest_y+28==392+28*4+10) {
             stopped = true;
@@ -47,7 +33,6 @@ class Lblock: public block {
         }
         return 0;
     }
-
     void moveDown() {
         if (!stopped) {
             y1 +=dim;        
@@ -57,6 +42,40 @@ class Lblock: public block {
             highest_y+=dim;
         }      
     }
+    void drawSingle(SDL_Renderer *rend ) {
+        SDL_Rect A = {x1, y1, dim, dim};
+        SDL_Rect E = {x1+1, y1+1, 26, 26};
+        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        SDL_RenderFillRect(rend, &A);
+        SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
+        SDL_RenderFillRect(rend, &E);
+    }
+
+    void draw(SDL_Renderer *rend ) {
+        SDL_Rect A = {x1, y1, dim, dim};
+        SDL_Rect B = {x2, y2, dim, dim};
+        SDL_Rect C = {x3, y3, dim, dim};
+        SDL_Rect D = {x4, y4, dim, dim};
+        SDL_Rect E = {x1+1, y1+1, 26, 26};
+        SDL_Rect F = {x2+1, y2+1, 26, 26};
+        SDL_Rect G = {x3+1, y3+1, 26, 26};
+        SDL_Rect H = {x4+1, y4+1, 26, 26};
+        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        SDL_RenderFillRect(rend, &A);
+        SDL_RenderFillRect(rend, &B);
+        SDL_RenderFillRect(rend, &C);
+        SDL_RenderFillRect(rend, &D);
+        SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
+        SDL_RenderFillRect(rend, &E);
+        SDL_RenderFillRect(rend, &F);
+        SDL_RenderFillRect(rend, &G);
+        SDL_RenderFillRect(rend, &H);
+    }
+};
+
+class Lblock: public block {
+  public:
+    Lblock(int x, int y) : block(x, y) {}
     void EstablishWest() {
         x1 = x1+dim*4;
         y1 = 10;
