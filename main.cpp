@@ -50,12 +50,12 @@ bool checkblockpos(spaces& array, block b) {
                         }
                     }
                     if (i==x3_Update) {
-                        if (j-1==y2_Update) {
+                        if (j-1==y3_Update) {
                             return true;
                         }
                     }
                     if (i==x4_Update) {
-                        if (j-1==y2_Update) {
+                        if (j-1==y4_Update) {
                             return true;
                         }
                     }
@@ -75,20 +75,40 @@ std::vector<SDL_Rect> all_rects;
 //blocks
 std::vector<block> all_blocks;
 
-//L blocks
-std::vector<LLblock> all_L_blocks;
+//LL blocks
+std::vector<LLblock> all_LL_blocks;
+
+//LR blocks
+std::vector<LRblock> all_LR_blocks;
 
 //T blocks
+std::vector<Tblock> all_T_blocks;
 
-//SL blocks
+//S blocks
 
-//SR blocks 
+//Z blocks 
 
 //I blocks
 
 //O blocks
-void updateSpaces(spaces& array) {
-        
+
+
+int BLOCKtoblock(block b) {
+        block A = block(b.x1, b.y1, true, b.type);
+        block B = block(b.x2, b.y2, true, b.type);
+        block C = block(b.x3, b.y3, true, b.type);
+        block D = block(b.x4, b.y4, true, b.type);
+        all_blocks.push_back(A);
+        all_blocks.push_back(B);
+        all_blocks.push_back(C);
+        all_blocks.push_back(D);
+        return 0;
+}
+void drawAllblocks(SDL_Renderer *rend) {
+    for (int i = 0; i<all_blocks.size(); i++) {
+        block b = all_blocks[i];
+        b.draw(rend);
+    }
 }
 
 int main( int argc, char *argv[] )
@@ -105,12 +125,12 @@ int main( int argc, char *argv[] )
     }
     int SPACES[10][18] = {0};
     //L blocks
-    Tblock first = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    Tblock second = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    first.EstablishEast();
+    Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    Iblock second = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    first.EstablishNS();
     //first.EstablishNorth();
-    second.EstablishWest();
-    //secondL.EstablishNorth();
+    //second.EstablishWest();
+    second.EstablishEW();
     //second.EstablishWest();
     //firstL.EstablishSouth();
 
@@ -157,8 +177,10 @@ int main( int argc, char *argv[] )
             stoppingFlag2 = checkblockpos(SPACES, second);
             if (stoppingFlag2) {
                 second.stopblock();
+                BLOCKtoblock(second);
             }
             if (stoppingFlag) {
+                BLOCKtoblock(first);
                 SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
                 second.moveDown();
                 setSpaces(SPACES, first.x1, first.y1);
@@ -206,10 +228,13 @@ int main( int argc, char *argv[] )
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
         //Drawing all L blocks
 
-        if (stoppingFlag) {
+        if (stoppingFlag && !stoppingFlag2) {
             second.draw(renderer);
         }
-        first.draw(renderer);
+        if (!stoppingFlag) {
+            first.draw(renderer);
+        }
+        drawAllblocks(renderer);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyRenderer(renderer);
