@@ -70,8 +70,6 @@ const Uint32 MOVE_INTERVAL = 200;
 
 //taken positions [x, y]
 //std::vector<std::array<int, 2>> taken_spaces;
-//rectangles 
-std::vector<SDL_Rect> all_rects;
 //blocks
 std::vector<block> all_blocks;
 
@@ -166,8 +164,8 @@ int main( int argc, char *argv[] )
                         rect.x += SPEED;
                         break;
                 }
-            }
-            */
+            }*/
+            
         }
 
         Uint32 currentTime = SDL_GetTicks();
