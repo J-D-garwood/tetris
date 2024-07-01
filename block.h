@@ -2,6 +2,10 @@
 #include <vector>
 #include <string>
 #include <SDL2/SDL.h>
+using namespace std;
+using std::cout;
+using std::endl;
+
 
 class block{
 public:
@@ -34,6 +38,78 @@ public:
     void setType(int t) {
         type = t;
     }
+    int* findLeftX() {
+        static int result[2];
+        result[0] = x1;
+        result[1] = y1;
+        if (x2 < result[0]) 
+        {
+            result[0] = x2;
+            result[1] = y2;
+        }
+        if (x3 < result[0]) 
+        {
+            result[0] = x3;
+            result[1] = y3;
+        }
+        if (x4 < result[0]) {
+            {
+            result[0] = x4;
+            result[1] = y4;
+        }
+        }
+        return result;
+    };
+    int* findRightX()  {
+        static int result[2];
+        result[0] = x1;
+        result[1] = y1;
+        if (x2 > result[0]) 
+        {
+            result[0] = x2;
+            result[1] = y2;
+        }
+        if (x3 > result[0]) 
+        {
+            result[0] = x3;
+            result[1] = y3;
+        }
+        if (x4 > result[0]) {
+            {
+            result[0] = x4;
+            result[1] = y4;
+        }
+        }
+        return result;
+    };
+//Needs to updated for complex blocks
+    void moveToRight(spaces& array) {
+        int rightX = ((findRightX()[0]-160)/28);
+        int rightY = ((findRightX()[1]-10)/28);
+        if (array[rightX+1][rightY]!=1) {
+            if (rightX<9) {
+                x1+=dim;
+                x2+=dim;
+                x3+=dim;
+                x4+=dim;
+            }
+        }
+        cout << rightX << endl;
+    }
+//Needs to updated for complex blocks
+    void moveToLeft(spaces& array) {
+        int leftX = (findLeftX()[0]-160)/28;
+        int leftY = ((findLeftX()[1]-10)/28);
+        if (array[leftX-1][leftY]!=1) {
+            if (leftX>0) {
+                x1-=dim;
+                x2-=dim;
+                x3-=dim;
+                x4-=dim;
+            }
+        }
+    }
+
     void stopblock() {
         stopped = true;
     }
@@ -938,6 +1014,7 @@ class Iblock: public block {
         y4 = 10+dim;
         highest_y = y4;
         setType(6);
+
     }
     void EstablishEW() {
         x1 = x1+dim*3;

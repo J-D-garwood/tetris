@@ -9,6 +9,7 @@ using std::endl;
 const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
 const int BOARD_WIDTH = 280; 
+bool gameOn =  true;
 
 using spaces =  int[10][18];
 int stoppingFlag = 0;
@@ -124,11 +125,11 @@ int main( int argc, char *argv[] )
     int SPACES[10][18] = {0};
     //L blocks
     Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    Iblock second = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    Sblock second = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
     first.EstablishNS();
     //first.EstablishNorth();
     //second.EstablishWest();
-    second.EstablishEW();
+    second.EstablishEast();
     //second.EstablishWest();
     //firstL.EstablishSouth();
 
@@ -146,25 +147,23 @@ int main( int argc, char *argv[] )
             {
                 break;
             }
-            /*
+            
             if (windowEvent.type == SDL_KEYDOWN)
             {
                 switch (windowEvent.key.keysym.sym)
                 {
-                    case SDLK_UP:
-                        rect.y -= SPEED;
+                    case SDLK_LEFT:
+                        second.moveToLeft(SPACES);
                         break;
                     case SDLK_DOWN:
-                        rect.y += SPEED;
                         break;
-                    case SDLK_LEFT:
-                        rect.x -= SPEED;
+                    case SDLK_UP:
                         break;
                     case SDLK_RIGHT:
-                        rect.x += SPEED;
+                        second.moveToRight(SPACES);
                         break;
                 }
-            }*/
+            }
             
         }
 
