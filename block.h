@@ -94,7 +94,6 @@ public:
                 x4+=dim;
             }
         }
-        cout << rightX << endl;
     }
 //Needs to updated for complex blocks
     void moveToLeft(spaces& array) {

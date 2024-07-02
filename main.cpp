@@ -5,6 +5,7 @@ using std::endl;
 #include <SDL2/SDL.h>
 #include "block.h"
 #include <string>
+#include <stdlib.h>
 
 const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
@@ -69,6 +70,11 @@ bool checkblockpos(spaces& array, block b) {
 // Move block sprite every 100 milliseconds
 const Uint32 MOVE_INTERVAL = 200;
 
+int randomBlockSelect() {
+    srand (time(NULL));
+    int num = rand() % 7 + 1;
+    return num;
+}
 //taken positions [x, y]
 //std::vector<std::array<int, 2>> taken_spaces;
 //blocks
@@ -205,7 +211,6 @@ int main( int argc, char *argv[] )
             first.moveDown();
             lastMoveTime = currentTime;  
         }
-
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
 
