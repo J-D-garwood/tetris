@@ -10,6 +10,7 @@ using std::endl;
 const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
 const int BOARD_WIDTH = 280; 
+
 bool gameOn =  true;
 
 using spaces =  int[10][18];
@@ -75,8 +76,9 @@ int randomBlockSelect() {
     int num = rand() % 7 + 1;
     return num;
 }
-//taken positions [x, y]
-//std::vector<std::array<int, 2>> taken_spaces;
+int currentBlock = randomBlockSelect();
+int nextBlock = randomBlockSelect();
+
 //blocks
 std::vector<block> all_blocks;
 
@@ -90,12 +92,55 @@ std::vector<LRblock> all_LR_blocks;
 std::vector<Tblock> all_T_blocks;
 
 //S blocks
+std::vector<Sblock> all_S_blocks;
 
 //Z blocks 
+std::vector<Zblock> all_Z_blocks;
 
 //I blocks
+std::vector<Iblock> all_I_blocks;
 
 //O blocks
+std::vector<Oblock> all_O_blocks;
+
+
+int addToActiveBlocks(int nextblock) {
+    switch (nextblock) {
+        case 1:
+            LRblock Lblock = LRblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_LR_blocks.push_back(Lblock);
+            break;
+        case 2:
+            LLblock Lblock_2 = LLblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_LL_blocks.push_back(Lblock_2);
+            break;
+        case 3:
+            Sblock S_block = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_S_blocks.push_back(S_block);
+            break;
+        case 4:
+            Zblock Z_block = Zblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_Z_blocks.push_back(Z_block);
+            break;
+        case 5:
+            Oblock O_block = Oblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_O_blocks.push_back(O_block);
+            break;    
+        case 6:
+            Iblock I_block = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_I_blocks.push_back(I_block);
+            break;
+        case 7:
+            Tblock T_block = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            all_T_blocks.push_back(T_block);
+            break;    
+            
+    }
+}
+
+
+//taken positions [x, y]
+//std::vector<std::array<int, 2>> taken_spaces;
 
 
 int BLOCKtoblock(block b) {
@@ -132,6 +177,7 @@ int main( int argc, char *argv[] )
     //L blocks
     Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
     Sblock second = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+
     first.EstablishNS();
     //first.EstablishNorth();
     //second.EstablishWest();
@@ -159,14 +205,14 @@ int main( int argc, char *argv[] )
                 switch (windowEvent.key.keysym.sym)
                 {
                     case SDLK_LEFT:
-                        second.moveToLeft(SPACES);
+                        //second.moveToLeft(SPACES);
                         break;
                     case SDLK_DOWN:
                         break;
                     case SDLK_UP:
                         break;
                     case SDLK_RIGHT:
-                        second.moveToRight(SPACES);
+                        //second.moveToRight(SPACES);
                         break;
                 }
             }
