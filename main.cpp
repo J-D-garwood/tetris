@@ -12,6 +12,7 @@ const int BOARD_HEIGHT = 392+28*4;
 const int BOARD_WIDTH = 280; 
 
 bool gameOn =  true;
+bool start = true;
 
 using spaces =  int[10][18];
 int stoppingFlag = 0;
@@ -29,7 +30,7 @@ void setSpaces(spaces& array, int x, int y) {
     }
 }
 
-bool checkblockpos(spaces& array, block b) {
+int checkblockpos(spaces& array, block b) {
     int x1_Update = (b.x1-160)/28;
     int y1_Update = (b.y1-10)/28;
     int x2_Update = (b.x2-160)/28;
@@ -44,29 +45,29 @@ bool checkblockpos(spaces& array, block b) {
                 if (i==x1_Update || i==x2_Update || i==x3_Update || i==x4_Update) {
                     if (i==x1_Update) {
                         if (j-1==y1_Update) {
-                            return true;
+                            return 1;
                         }
                     }
                     if (i==x2_Update) {
                         if (j-1==y2_Update) {
-                            return true;
+                            return 1;
                         }
                     }
                     if (i==x3_Update) {
                         if (j-1==y3_Update) {
-                            return true;
+                            return 1;
                         }
                     }
                     if (i==x4_Update) {
                         if (j-1==y4_Update) {
-                            return true;
+                            return 1;
                         }
                     }
                 }   
             }
         }
     }
-    return false;
+    return 0;
 }
 // Move block sprite every 100 milliseconds
 const Uint32 MOVE_INTERVAL = 200;
@@ -138,7 +139,111 @@ int addToActiveBlocks(int nextblock) {
     }
 }
 
-
+int drawActiveBlock(int currentblock, spaces& array ,SDL_Renderer *rend) {
+    switch (currentBlock) {
+        case 1:
+            all_LR_blocks[all_LR_blocks.size()].draw(rend);
+            stoppingFlag = all_LR_blocks[all_LR_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_LR_blocks[all_LR_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_LR_blocks[all_LR_blocks.size()]);
+                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x1, all_LR_blocks[all_LR_blocks.size()].y1);
+                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x2, all_LR_blocks[all_LR_blocks.size()].y2);
+                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x3, all_LR_blocks[all_LR_blocks.size()].y3);
+                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x4, all_LR_blocks[all_LR_blocks.size()].y4);
+                return 1;
+            }
+            break;
+        case 2:
+            all_LL_blocks[all_LL_blocks.size()].draw(rend);
+            stoppingFlag = all_LL_blocks[all_LL_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_LL_blocks[all_LL_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_LL_blocks[all_LL_blocks.size()]);
+                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x1, all_LL_blocks[all_LL_blocks.size()].y1);
+                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x2, all_LL_blocks[all_LL_blocks.size()].y2);
+                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x3, all_LL_blocks[all_LL_blocks.size()].y3);
+                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x4, all_LL_blocks[all_LL_blocks.size()].y4);
+                return 1;
+            }
+            break;
+        case 3:
+            all_S_blocks[all_S_blocks.size()].draw(rend);
+            stoppingFlag = all_S_blocks[all_S_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_S_blocks[all_S_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_S_blocks[all_S_blocks.size()]);
+                setSpaces(array, all_S_blocks[all_S_blocks.size()].x1, all_S_blocks[all_S_blocks.size()].y1);
+                setSpaces(array, all_S_blocks[all_S_blocks.size()].x2, all_S_blocks[all_S_blocks.size()].y2);
+                setSpaces(array, all_S_blocks[all_S_blocks.size()].x3, all_S_blocks[all_S_blocks.size()].y3);
+                setSpaces(array, all_S_blocks[all_S_blocks.size()].x4, all_S_blocks[all_S_blocks.size()].y4);
+            }
+            break;
+        case 4:
+            all_Z_blocks[all_Z_blocks.size()].draw(rend);
+            stoppingFlag = all_Z_blocks[all_Z_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_Z_blocks[all_Z_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_Z_blocks[all_Z_blocks.size()]);
+                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x1, all_Z_blocks[all_Z_blocks.size()].y1);
+                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x2, all_Z_blocks[all_Z_blocks.size()].y2);
+                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x3, all_Z_blocks[all_Z_blocks.size()].y3);
+                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x4, all_Z_blocks[all_Z_blocks.size()].y4);
+            }
+            break;
+        case 5:
+            all_O_blocks[all_O_blocks.size()].draw(rend);
+            stoppingFlag = all_O_blocks[all_O_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_O_blocks[all_O_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_O_blocks[all_O_blocks.size()]);
+                setSpaces(array, all_O_blocks[all_O_blocks.size()].x1, all_O_blocks[all_O_blocks.size()].y1);
+                setSpaces(array, all_O_blocks[all_O_blocks.size()].x2, all_O_blocks[all_O_blocks.size()].y2);
+                setSpaces(array, all_O_blocks[all_O_blocks.size()].x3, all_O_blocks[all_O_blocks.size()].y3);
+                setSpaces(array, all_O_blocks[all_O_blocks.size()].x4, all_O_blocks[all_O_blocks.size()].y4);
+            }
+            break;
+        case 6: 
+            all_I_blocks[all_I_blocks.size()].draw(rend);
+            stoppingFlag = all_I_blocks[all_I_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_I_blocks[all_I_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_I_blocks[all_I_blocks.size()]);
+                setSpaces(array, all_I_blocks[all_I_blocks.size()].x1, all_I_blocks[all_I_blocks.size()].y1);
+                setSpaces(array, all_I_blocks[all_I_blocks.size()].x2, all_I_blocks[all_I_blocks.size()].y2);
+                setSpaces(array, all_I_blocks[all_I_blocks.size()].x3, all_I_blocks[all_I_blocks.size()].y3);
+                setSpaces(array, all_I_blocks[all_I_blocks.size()].x4, all_I_blocks[all_I_blocks.size()].y4);
+            }
+            break;
+        case 7:
+            all_T_blocks[all_T_blocks.size()].draw(rend);
+            stoppingFlag = all_T_blocks[all_T_blocks.size()].checkpos();
+            stoppingFlag2 = checkblockpos(array, all_T_blocks[all_T_blocks.size()]);
+            if (stoppingFlag||stoppingFlag2) {
+                stoppingFlag = 0;
+                stoppingFlag2 = 0;
+                BLOCKtoblock(all_T_blocks[all_T_blocks.size()]);
+                setSpaces(array, all_T_blocks[all_T_blocks.size()].x1, all_T_blocks[all_T_blocks.size()].y1);
+                setSpaces(array, all_T_blocks[all_T_blocks.size()].x2, all_T_blocks[all_T_blocks.size()].y2);
+                setSpaces(array, all_T_blocks[all_T_blocks.size()].x3, all_T_blocks[all_T_blocks.size()].y3);
+                setSpaces(array, all_T_blocks[all_T_blocks.size()].x4, all_T_blocks[all_T_blocks.size()].y4);
+            }
+            break;
+        ;
+    }
+}
 //taken positions [x, y]
 //std::vector<std::array<int, 2>> taken_spaces;
 
@@ -221,7 +326,16 @@ int main( int argc, char *argv[] )
 
         Uint32 currentTime = SDL_GetTicks();
         if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
-            stoppingFlag = first.checkpos();
+            if (start) {
+                addToActiveBlocks(nextBlock);
+                nextBlock = randomBlockSelect();
+                currentBlock = nextBlock;
+                start = false;
+            } else {
+
+            }
+
+            /*stoppingFlag = first.checkpos();
             second.checkpos();
             stoppingFlag2 = checkblockpos(SPACES, second);
             if (stoppingFlag2) {
@@ -252,10 +366,10 @@ int main( int argc, char *argv[] )
                     }
                     cout << endl;
                 }
-                */
             }
             first.moveDown();
             lastMoveTime = currentTime;  
+            */
         }
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
