@@ -16,6 +16,15 @@ bool start = true;
 
 using spaces =  int[10][18];
 int stoppingFlag = 0;
+int GameOverFlag = 0;
+int checkTopLvl(spaces& array) {
+    for (int i = 0; i<10; ++i) {
+        if (array[i][18]==1) {
+            return 1;
+        }
+    }
+    return 0;
+}
 void setSpaces(spaces& array, int x, int y) {
     // Update the array with your data
     int xUpdate = (x-160)/28;
@@ -403,17 +412,19 @@ int main( int argc, char *argv[] )
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
        if (start) {
-                nextBlock = randomBlockSelect();
-                addToActiveBlocks(nextBlock);
-                currentBlock = nextBlock;
-                start = false;
-                drawActiveBlock(currentBlock, renderer);
+                if (!GameOverFlag) {
+                    nextBlock = randomBlockSelect();
+                    addToActiveBlocks(nextBlock);
+                    currentBlock = nextBlock;
+                    start = false;
+                    drawActiveBlock(currentBlock, renderer);
+                }
             } else {
                 drawActiveBlock(currentBlock, renderer);
                 stoppingFlag = checkActiveBlock(SPACES, currentBlock);
+                GameOverFlag = checkTopLvl(SPACES);
                 if (stoppingFlag) {
                     start = true;
-
                 }
         }
         Uint32 currentTime = SDL_GetTicks();
