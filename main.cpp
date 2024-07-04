@@ -16,7 +16,6 @@ bool start = true;
 
 using spaces =  int[10][18];
 int stoppingFlag = 0;
-int stoppingFlag2 = 0;
 void setSpaces(spaces& array, int x, int y) {
     // Update the array with your data
     int xUpdate = (x-160)/28;
@@ -197,8 +196,13 @@ int drawActiveBlock(int currentblock ,SDL_Renderer *rend) {
     }
     return 0;
 }
-//taken positions [x, y]
-//std::vector<std::array<int, 2>> taken_spaces;
+void activeToStop(spaces& array, block b) {
+    BLOCKtoblock(b);
+    setSpaces(array, b.x1, b.y1);
+    setSpaces(array, b.x2, b.y2);
+    setSpaces(array, b.x3, b.y3);
+    setSpaces(array, b.x4, b.y4);
+}//std::vector<std::array<int, 2>> taken_spaces;
 int moveActiveBlock(int currentblock) {
     switch (currentblock) {
         case 1:
@@ -225,6 +229,97 @@ int moveActiveBlock(int currentblock) {
         ;
     }
     return 0;
+}
+
+int checkActiveBlock(spaces& array, int currentblock) {
+    int stopFlag = 0;
+    switch (currentblock) {
+        case 1:
+            stopFlag = checkblockpos(array, all_LR_blocks[all_LR_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_LR_blocks[all_LR_blocks.size()-1].checkpos();
+                if (stopFlag) {
+                    all_LR_blocks[all_LR_blocks.size()-1].stopblock();
+                    activeToStop(array, all_LR_blocks[all_LR_blocks.size()-1]);
+                }
+            } else {
+                activeToStop(array, all_LR_blocks[all_LR_blocks.size()-1]);
+            }
+            break;
+        case 2:
+            stopFlag = checkblockpos(array, all_LL_blocks[all_LL_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_LL_blocks[all_LL_blocks.size()-1].checkpos();
+                if (stopFlag) {all_LL_blocks[all_LL_blocks.size()-1].stopblock();
+                    activeToStop(array, all_LL_blocks[all_LL_blocks.size()-1]);
+                }
+            } else {
+                activeToStop(array, all_LL_blocks[all_LL_blocks.size()-1]);
+            }
+
+            break;
+        case 3:
+            stopFlag = checkblockpos(array, all_S_blocks[all_S_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_S_blocks[all_S_blocks.size()-1].checkpos();
+                if (stopFlag) {
+                    all_S_blocks[all_S_blocks.size()-1].stopblock();
+                    activeToStop(array, all_S_blocks[all_S_blocks.size()-1]);
+                }
+            } else {
+                activeToStop(array, all_S_blocks[all_S_blocks.size()-1]);
+            }
+            break;
+        case 4:
+            stopFlag = checkblockpos(array, all_Z_blocks[all_Z_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_Z_blocks[all_Z_blocks.size()-1].checkpos();
+                if (stopFlag) {
+                    all_Z_blocks[all_Z_blocks.size()-1].stopblock();
+                    activeToStop(array, all_Z_blocks[all_Z_blocks.size()-1]);
+                }
+            } else {
+                activeToStop(array, all_Z_blocks[all_Z_blocks.size()-1]);
+            }
+            break;
+        case 5:
+            stopFlag = checkblockpos(array, all_O_blocks[all_O_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_O_blocks[all_O_blocks.size()-1].checkpos();
+                if (stopFlag) {
+                    all_O_blocks[all_O_blocks.size()-1].stopblock();
+                    activeToStop(array, all_O_blocks[all_O_blocks.size()-1]);
+                }
+            } else {
+                activeToStop(array, all_O_blocks[all_O_blocks.size()-1]);
+            }
+            break;
+        case 6: 
+            stopFlag = checkblockpos(array, all_I_blocks[all_I_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_I_blocks[all_I_blocks.size()-1].checkpos();
+                if (stopFlag) {
+                    all_I_blocks[all_I_blocks.size()-1].stopblock();
+                    activeToStop(array, all_I_blocks[all_I_blocks.size()-1]);
+                }
+            } else {
+                activeToStop(array, all_I_blocks[all_I_blocks.size()-1]);
+            }
+            break;
+        case 7:
+            stopFlag = checkblockpos(array, all_T_blocks[all_T_blocks.size()-1]);
+            if (!stopFlag) {
+                stopFlag = all_T_blocks[all_T_blocks.size()-1].checkpos();
+                if (stopFlag) {
+                    all_T_blocks[all_T_blocks.size()-1].stopblock();
+                    activeToStop(array, all_T_blocks[all_T_blocks.size()-1]);}
+            } else {
+                activeToStop(array, all_T_blocks[all_T_blocks.size()-1]);
+            }
+            break;
+        ;
+    }
+    return stopFlag;
 }
 void drawAllblocks(SDL_Renderer *rend) {
     for (int i = 0; i<all_blocks.size(); i++) {
@@ -307,14 +402,6 @@ int main( int argc, char *argv[] )
         }  
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
-        //Drawing all L blocks
-
-        /*if (stoppingFlag && !stoppingFlag2) {
-            second.draw(renderer);
-        }
-        if (!stoppingFlag) {
-            first.draw(renderer);
-        }*/
        if (start) {
                 nextBlock = randomBlockSelect();
                 addToActiveBlocks(nextBlock);
@@ -323,6 +410,11 @@ int main( int argc, char *argv[] )
                 drawActiveBlock(currentBlock, renderer);
             } else {
                 drawActiveBlock(currentBlock, renderer);
+                stoppingFlag = checkActiveBlock(SPACES, currentBlock);
+                if (stoppingFlag) {
+                    start = true;
+
+                }
         }
         Uint32 currentTime = SDL_GetTicks();
         if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
