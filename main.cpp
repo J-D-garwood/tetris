@@ -105,149 +105,60 @@ std::vector<Iblock> all_I_blocks;
 std::vector<Oblock> all_O_blocks;
 
 
-int addToActiveBlocks(int nextblock) {
+void addToActiveBlocks(int nextblock) {
     switch (nextblock) {
         case 1:
-            LRblock Lblock = LRblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-            all_LR_blocks.push_back(Lblock);
+            {
+                LRblock Lblock = LRblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+                Lblock.EstablishWest();
+                all_LR_blocks.push_back(Lblock);
             break;
+            }
         case 2:
+            {
             LLblock Lblock_2 = LLblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            Lblock_2.EstablishWest();
             all_LL_blocks.push_back(Lblock_2);
             break;
+            }
         case 3:
+            {
             Sblock S_block = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            S_block.EstablishWest();
             all_S_blocks.push_back(S_block);
             break;
+            }
         case 4:
+            {
             Zblock Z_block = Zblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            Z_block.EstablishWest();
             all_Z_blocks.push_back(Z_block);
             break;
+            }   
         case 5:
+            {
             Oblock O_block = Oblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            O_block.Establish();
             all_O_blocks.push_back(O_block);
-            break;    
+            break; 
+            }      
         case 6:
+            {
             Iblock I_block = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            I_block.EstablishNS();
             all_I_blocks.push_back(I_block);
             break;
+            }   
         case 7:
+            {
             Tblock T_block = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+            T_block.EstablishWest();
             all_T_blocks.push_back(T_block);
-            break;    
+            break;
+            }    
             
     }
 }
-
-int drawActiveBlock(int currentblock, spaces& array ,SDL_Renderer *rend) {
-    switch (currentBlock) {
-        case 1:
-            all_LR_blocks[all_LR_blocks.size()].draw(rend);
-            stoppingFlag = all_LR_blocks[all_LR_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_LR_blocks[all_LR_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_LR_blocks[all_LR_blocks.size()]);
-                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x1, all_LR_blocks[all_LR_blocks.size()].y1);
-                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x2, all_LR_blocks[all_LR_blocks.size()].y2);
-                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x3, all_LR_blocks[all_LR_blocks.size()].y3);
-                setSpaces(array, all_LR_blocks[all_LR_blocks.size()].x4, all_LR_blocks[all_LR_blocks.size()].y4);
-                return 1;
-            }
-            break;
-        case 2:
-            all_LL_blocks[all_LL_blocks.size()].draw(rend);
-            stoppingFlag = all_LL_blocks[all_LL_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_LL_blocks[all_LL_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_LL_blocks[all_LL_blocks.size()]);
-                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x1, all_LL_blocks[all_LL_blocks.size()].y1);
-                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x2, all_LL_blocks[all_LL_blocks.size()].y2);
-                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x3, all_LL_blocks[all_LL_blocks.size()].y3);
-                setSpaces(array, all_LL_blocks[all_LL_blocks.size()].x4, all_LL_blocks[all_LL_blocks.size()].y4);
-                return 1;
-            }
-            break;
-        case 3:
-            all_S_blocks[all_S_blocks.size()].draw(rend);
-            stoppingFlag = all_S_blocks[all_S_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_S_blocks[all_S_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_S_blocks[all_S_blocks.size()]);
-                setSpaces(array, all_S_blocks[all_S_blocks.size()].x1, all_S_blocks[all_S_blocks.size()].y1);
-                setSpaces(array, all_S_blocks[all_S_blocks.size()].x2, all_S_blocks[all_S_blocks.size()].y2);
-                setSpaces(array, all_S_blocks[all_S_blocks.size()].x3, all_S_blocks[all_S_blocks.size()].y3);
-                setSpaces(array, all_S_blocks[all_S_blocks.size()].x4, all_S_blocks[all_S_blocks.size()].y4);
-            }
-            break;
-        case 4:
-            all_Z_blocks[all_Z_blocks.size()].draw(rend);
-            stoppingFlag = all_Z_blocks[all_Z_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_Z_blocks[all_Z_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_Z_blocks[all_Z_blocks.size()]);
-                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x1, all_Z_blocks[all_Z_blocks.size()].y1);
-                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x2, all_Z_blocks[all_Z_blocks.size()].y2);
-                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x3, all_Z_blocks[all_Z_blocks.size()].y3);
-                setSpaces(array, all_Z_blocks[all_Z_blocks.size()].x4, all_Z_blocks[all_Z_blocks.size()].y4);
-            }
-            break;
-        case 5:
-            all_O_blocks[all_O_blocks.size()].draw(rend);
-            stoppingFlag = all_O_blocks[all_O_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_O_blocks[all_O_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_O_blocks[all_O_blocks.size()]);
-                setSpaces(array, all_O_blocks[all_O_blocks.size()].x1, all_O_blocks[all_O_blocks.size()].y1);
-                setSpaces(array, all_O_blocks[all_O_blocks.size()].x2, all_O_blocks[all_O_blocks.size()].y2);
-                setSpaces(array, all_O_blocks[all_O_blocks.size()].x3, all_O_blocks[all_O_blocks.size()].y3);
-                setSpaces(array, all_O_blocks[all_O_blocks.size()].x4, all_O_blocks[all_O_blocks.size()].y4);
-            }
-            break;
-        case 6: 
-            all_I_blocks[all_I_blocks.size()].draw(rend);
-            stoppingFlag = all_I_blocks[all_I_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_I_blocks[all_I_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_I_blocks[all_I_blocks.size()]);
-                setSpaces(array, all_I_blocks[all_I_blocks.size()].x1, all_I_blocks[all_I_blocks.size()].y1);
-                setSpaces(array, all_I_blocks[all_I_blocks.size()].x2, all_I_blocks[all_I_blocks.size()].y2);
-                setSpaces(array, all_I_blocks[all_I_blocks.size()].x3, all_I_blocks[all_I_blocks.size()].y3);
-                setSpaces(array, all_I_blocks[all_I_blocks.size()].x4, all_I_blocks[all_I_blocks.size()].y4);
-            }
-            break;
-        case 7:
-            all_T_blocks[all_T_blocks.size()].draw(rend);
-            stoppingFlag = all_T_blocks[all_T_blocks.size()].checkpos();
-            stoppingFlag2 = checkblockpos(array, all_T_blocks[all_T_blocks.size()]);
-            if (stoppingFlag||stoppingFlag2) {
-                stoppingFlag = 0;
-                stoppingFlag2 = 0;
-                BLOCKtoblock(all_T_blocks[all_T_blocks.size()]);
-                setSpaces(array, all_T_blocks[all_T_blocks.size()].x1, all_T_blocks[all_T_blocks.size()].y1);
-                setSpaces(array, all_T_blocks[all_T_blocks.size()].x2, all_T_blocks[all_T_blocks.size()].y2);
-                setSpaces(array, all_T_blocks[all_T_blocks.size()].x3, all_T_blocks[all_T_blocks.size()].y3);
-                setSpaces(array, all_T_blocks[all_T_blocks.size()].x4, all_T_blocks[all_T_blocks.size()].y4);
-            }
-            break;
-        ;
-    }
-}
-//taken positions [x, y]
-//std::vector<std::array<int, 2>> taken_spaces;
-
-
 int BLOCKtoblock(block b) {
         block A = block(b.x1, b.y1, true, b.type);
         block B = block(b.x2, b.y2, true, b.type);
@@ -258,6 +169,62 @@ int BLOCKtoblock(block b) {
         all_blocks.push_back(C);
         all_blocks.push_back(D);
         return 0;
+}
+int drawActiveBlock(int currentblock ,SDL_Renderer *rend) {
+    switch (currentblock) {
+        case 1:
+            all_LR_blocks[all_LR_blocks.size()-1].draw(rend);
+            break;
+        case 2:
+            all_LL_blocks[all_LL_blocks.size()-1].draw(rend);
+            break;
+        case 3:
+            all_S_blocks[all_S_blocks.size()-1].draw(rend);
+            break;
+        case 4:
+            all_Z_blocks[all_Z_blocks.size()-1].draw(rend);
+            break;
+        case 5:
+            all_O_blocks[all_O_blocks.size()-1].draw(rend);
+            break;
+        case 6: 
+            all_I_blocks[all_I_blocks.size()-1].draw(rend);
+            break;
+        case 7:
+            all_T_blocks[all_T_blocks.size()-1].draw(rend);
+            break;
+        ;
+    }
+    return 0;
+}
+//taken positions [x, y]
+//std::vector<std::array<int, 2>> taken_spaces;
+int moveActiveBlock(int currentblock) {
+    switch (currentblock) {
+        case 1:
+            all_LR_blocks[all_LR_blocks.size()-1].moveDown();
+            break;
+        case 2:
+            all_LL_blocks[all_LL_blocks.size()-1].moveDown();
+            break;
+        case 3:
+            all_S_blocks[all_S_blocks.size()-1].moveDown();
+            break;
+        case 4:
+            all_Z_blocks[all_Z_blocks.size()-1].moveDown();
+            break;
+        case 5:
+            all_O_blocks[all_O_blocks.size()-1].moveDown();
+            break;
+        case 6: 
+            all_I_blocks[all_I_blocks.size()-1].moveDown();
+            break;
+        case 7:
+            all_T_blocks[all_T_blocks.size()-1].moveDown();
+            break;
+        ;
+    }
+    return 0;
 }
 void drawAllblocks(SDL_Renderer *rend) {
     for (int i = 0; i<all_blocks.size(); i++) {
@@ -280,13 +247,13 @@ int main( int argc, char *argv[] )
     }
     int SPACES[10][18] = {0};
     //L blocks
-    Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    Sblock second = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    //Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
+    //Sblock second = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
 
-    first.EstablishNS();
+    //first.EstablishNS();
     //first.EstablishNorth();
     //second.EstablishWest();
-    second.EstablishEast();
+    //second.EstablishEast();
     //second.EstablishWest();
     //firstL.EstablishSouth();
 
@@ -323,54 +290,6 @@ int main( int argc, char *argv[] )
             }
             
         }
-
-        Uint32 currentTime = SDL_GetTicks();
-        if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
-            if (start) {
-                addToActiveBlocks(nextBlock);
-                nextBlock = randomBlockSelect();
-                currentBlock = nextBlock;
-                start = false;
-            } else {
-
-            }
-
-            /*stoppingFlag = first.checkpos();
-            second.checkpos();
-            stoppingFlag2 = checkblockpos(SPACES, second);
-            if (stoppingFlag2) {
-                second.stopblock();
-                BLOCKtoblock(second);
-            }
-            if (stoppingFlag) {
-                BLOCKtoblock(first);
-                SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-                second.moveDown();
-                setSpaces(SPACES, first.x1, first.y1);
-                setSpaces(SPACES, first.x2, first.y2);
-                setSpaces(SPACES, first.x3, first.y3);
-                setSpaces(SPACES, first.x4, first.y4);
-                /*cout << firstL.x1 << " " << firstL.y1 << endl;
-                //cout << 5*28+160 << " " << 1*28+10 << endl;
-                cout << firstL.x2 << " " << firstL.y2 << endl;
-                //cout << 5*28+160 << " " << firstL.y1 << endl;
-                cout << firstL.x3 << " " << firstL.y3 << endl;
-                //cout << 5*28+160 << " " << firstL.y1 << endl;
-                cout << firstL.x4 << " " << firstL.y4 << endl;
-                //cout << 4*28+160 << " " << firstL.y1 << endl;
-                for(int a = 0; a < 10; a++)
-                {
-                    for(int b = 0; b < 18; b++)
-                    {
-                    cout << SPACES[a][b] << " ";
-                    }
-                    cout << endl;
-                }
-            }
-            first.moveDown();
-            lastMoveTime = currentTime;  
-            */
-        }
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
 
@@ -390,11 +309,25 @@ int main( int argc, char *argv[] )
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
         //Drawing all L blocks
 
-        if (stoppingFlag && !stoppingFlag2) {
+        /*if (stoppingFlag && !stoppingFlag2) {
             second.draw(renderer);
         }
         if (!stoppingFlag) {
             first.draw(renderer);
+        }*/
+       if (start) {
+                nextBlock = randomBlockSelect();
+                addToActiveBlocks(nextBlock);
+                currentBlock = nextBlock;
+                start = false;
+                drawActiveBlock(currentBlock, renderer);
+            } else {
+                drawActiveBlock(currentBlock, renderer);
+        }
+        Uint32 currentTime = SDL_GetTicks();
+        if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
+            moveActiveBlock(currentBlock);
+            lastMoveTime = currentTime;
         }
         drawAllblocks(renderer);
         SDL_RenderPresent(renderer);
