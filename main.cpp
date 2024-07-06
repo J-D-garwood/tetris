@@ -78,7 +78,7 @@ int checkblockpos(spaces& array, block b) {
     return 0;
 }
 // Move block sprite every 100 milliseconds
-const Uint32 MOVE_INTERVAL = 200;
+const Uint32 MOVE_INTERVAL = 500;
 
 int randomBlockSelect() {
     srand (time(NULL));
@@ -239,6 +239,60 @@ int moveActiveBlock(int currentblock) {
     }
     return 0;
 }
+int LeftActiveBlock(spaces& array, int currentblock) {
+    switch (currentblock) {
+        case 1:
+            all_LR_blocks[all_LR_blocks.size()-1].moveToLeft(array);
+            break;
+        case 2:
+            all_LL_blocks[all_LL_blocks.size()-1].moveToLeft(array);
+            break;
+        case 3:
+            all_S_blocks[all_S_blocks.size()-1].moveToLeft(array);
+            break;
+        case 4:
+            all_Z_blocks[all_Z_blocks.size()-1].moveToLeft(array);
+            break;
+        case 5:
+            all_O_blocks[all_O_blocks.size()-1].moveToLeft(array);
+            break;
+        case 6: 
+            all_I_blocks[all_I_blocks.size()-1].moveToLeft(array);
+            break;
+        case 7:
+            all_T_blocks[all_T_blocks.size()-1].moveToLeft(array);
+            break;
+        ;
+    }
+    return 0;
+}
+int RightActiveBlock(spaces& array, int currentblock) {
+    switch (currentblock) {
+        case 1:
+            all_LR_blocks[all_LR_blocks.size()-1].moveToRight(array);
+            break;
+        case 2:
+            all_LL_blocks[all_LL_blocks.size()-1].moveToRight(array);
+            break;
+        case 3:
+            all_S_blocks[all_S_blocks.size()-1].moveToRight(array);
+            break;
+        case 4:
+            all_Z_blocks[all_Z_blocks.size()-1].moveToRight(array);
+            break;
+        case 5:
+            all_O_blocks[all_O_blocks.size()-1].moveToRight(array);
+            break;
+        case 6: 
+            all_I_blocks[all_I_blocks.size()-1].moveToRight(array);
+            break;
+        case 7:
+            all_T_blocks[all_T_blocks.size()-1].moveToRight(array);
+            break;
+        ;
+    }
+    return 0;
+}
 
 int checkActiveBlock(spaces& array, int currentblock) {
     int stopFlag = 0;
@@ -382,6 +436,7 @@ int main( int argc, char *argv[] )
                 {
                     case SDLK_LEFT:
                         //second.moveToLeft(SPACES);
+                        LeftActiveBlock(SPACES, currentBlock);
                         break;
                     case SDLK_DOWN:
                         break;
@@ -389,6 +444,7 @@ int main( int argc, char *argv[] )
                         break;
                     case SDLK_RIGHT:
                         //second.moveToRight(SPACES);
+                        RightActiveBlock(SPACES, currentBlock);
                         break;
                 }
             }

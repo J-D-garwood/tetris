@@ -22,6 +22,7 @@ public:
     int x4;
     int y4;
     int type;
+    int rotation;// 1 = north, 2 = east, 3 = south, 4 = west
     using spaces =  int[10][18];
     block(int x_pos, int y_pos, bool stop = false, int t = 0) {
         x1 = x_pos;
