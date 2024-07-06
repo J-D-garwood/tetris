@@ -38,6 +38,31 @@ public:
     void setType(int t) {
         type = t;
     }
+    void innerBoxCol(SDL_Renderer *rend, int type) {
+        switch (type) {
+            case 1:
+                 SDL_SetRenderDrawColor(rend, 153, 76, 0, 255);
+                 break;
+            case 2:
+                SDL_SetRenderDrawColor(rend, 0, 204, 204, 255);
+                break;
+            case 3:
+                SDL_SetRenderDrawColor(rend, 178, 255, 102, 255);
+                break;
+            case 4:
+                 SDL_SetRenderDrawColor(rend, 255, 51, 255, 255);
+                 break;
+            case 5:
+                 SDL_SetRenderDrawColor(rend, 255, 51, 51, 255);
+                 break;
+            case 6:
+                SDL_SetRenderDrawColor(rend, 255, 153, 51, 255);
+                break;
+            case 7:
+                 SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+                 break;
+        }
+    }
     int* findLeftX() {
         static int result[2];
         result[0] = x1;
@@ -138,38 +163,38 @@ public:
     }
 
     void draw(SDL_Renderer *rend ) {
-        SDL_Rect A = {x1, y1, dim, dim};
-        SDL_Rect B = {x2, y2, dim, dim};
-        SDL_Rect C = {x3, y3, dim, dim};
-        SDL_Rect D = {x4, y4, dim, dim};
-        SDL_Rect E = {x1+1, y1+1, 26, 26};
-        SDL_Rect F = {x2+1, y2+1, 26, 26};
-        SDL_Rect G = {x3+1, y3+1, 26, 26};
-        SDL_Rect H = {x4+1, y4+1, 26, 26};
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        if (y1>=10) {
+        SDL_Rect A = {x1, y1, dim, dim};
+        SDL_Rect E = {x1+1, y1+1, 26, 26};
         SDL_RenderFillRect(rend, &A);
-        SDL_RenderFillRect(rend, &B);
-        SDL_RenderFillRect(rend, &C);
-        SDL_RenderFillRect(rend, &D);
-        if (type == 1) { //LR Block - Brown
-            SDL_SetRenderDrawColor(rend, 153, 76, 0, 255);
-        } else if (type == 2) { //LL Block - Blue
-            SDL_SetRenderDrawColor(rend, 0, 204, 204, 255);
-        } else if (type == 3) { //S Block - Green
-            SDL_SetRenderDrawColor(rend, 178, 255, 102, 255);
-        } else if (type == 4) { //Z Block - Pink
-            SDL_SetRenderDrawColor(rend, 255, 51, 255, 255);
-        } else if (type == 5) { //O Block - Red
-            SDL_SetRenderDrawColor(rend, 255, 51, 51, 255);
-        } else if (type == 6) { //I Block - Orange
-            SDL_SetRenderDrawColor(rend, 255, 153, 51, 255);
-        } else if (type == 7) { //T Block - White
-            SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-        }
+        innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &E);
+        } 
+        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        if (y2>=10) {
+        SDL_Rect B = {x2, y2, dim, dim};
+        SDL_Rect F = {x2+1, y2+1, 26, 26};
+        SDL_RenderFillRect(rend, &B);
+        innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &F);
+        } 
+        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        if (y3>=10) {
+        SDL_Rect C = {x3, y3, dim, dim};
+        SDL_Rect G = {x3+1, y3+1, 26, 26};
+        SDL_RenderFillRect(rend, &C);
+        innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &G);
+        } 
+        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        if (y4>=10) {
+        SDL_Rect D = {x4, y4, dim, dim};
+        SDL_Rect H = {x4+1, y4+1, 26, 26};
+        SDL_RenderFillRect(rend, &D);
+        innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &H);
+        } 
     }
 };
 
