@@ -1,11 +1,11 @@
 #include <iostream>
-using std::cout;
-using std::endl;
 #include <vector>
 #include <SDL2/SDL.h>
 #include "block.h"
 #include <string>
 #include <stdlib.h>
+using std::cout;
+using std::endl;
 
 const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
@@ -14,6 +14,7 @@ const int BOARD_WIDTH = 280;
 bool gameOn =  true;
 bool start = true;
 
+const Uint8* keystate;
 using spaces =  int[10][18];
 int stoppingFlag = 0;
 int GameOverFlag = 0;
@@ -118,28 +119,28 @@ void addToActiveBlocks(int nextblock) {
         case 1:
             {
                 LRblock Lblock = LRblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-                Lblock.EstablishWest();
+                Lblock.Establish();
                 all_LR_blocks.push_back(Lblock);
             break;
             }
         case 2:
             {
             LLblock Lblock_2 = LLblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-            Lblock_2.EstablishWest();
+            Lblock_2.Establish();
             all_LL_blocks.push_back(Lblock_2);
             break;
             }
         case 3:
             {
             Sblock S_block = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-            S_block.EstablishWest();
+            S_block.Establish();
             all_S_blocks.push_back(S_block);
             break;
             }
         case 4:
             {
             Zblock Z_block = Zblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-            Z_block.EstablishWest();
+            Z_block.Establish();
             all_Z_blocks.push_back(Z_block);
             break;
             }   
@@ -153,14 +154,14 @@ void addToActiveBlocks(int nextblock) {
         case 6:
             {
             Iblock I_block = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-            I_block.EstablishNS();
+            I_block.Establish();
             all_I_blocks.push_back(I_block);
             break;
             }   
         case 7:
             {
             Tblock T_block = Tblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-            T_block.EstablishWest();
+            T_block.Establish();
             all_T_blocks.push_back(T_block);
             break;
             }    
@@ -404,6 +405,7 @@ int main( int argc, char *argv[] )
         return 1;
     }
     int SPACES[10][18] = {0};
+
     //L blocks
     //Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
     //Sblock second = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
@@ -429,6 +431,10 @@ int main( int argc, char *argv[] )
             {
                 break;
             }
+
+    const Uint8* keystate = SDL_GetKeyboardState(NULL);
+    //more work to be done on this^^^
+    //continuous-response keys
             
             if (windowEvent.type == SDL_KEYDOWN)
             {

@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <SDL2/SDL.h>
+#include <stdlib.h>
 using namespace std;
 using std::cout;
 using std::endl;
@@ -36,8 +37,17 @@ public:
         stopped = stop;
         type = t;
     }
+    int randest() {
+        srand (time(NULL));
+        int dir = rand() % 4 + 1;
+        return dir;
+    }
+
     void setType(int t) {
         type = t;
+    }
+    void setRot(int r) {
+        rotation = r;
     }
     void innerBoxCol(SDL_Renderer *rend, int type) {
         switch (type) {
@@ -213,6 +223,7 @@ class Tblock: public block {
         y4 = 10+dim;
         highest_y = y4;
         setType(7);
+        setRot(1);
     }
     void EstablishEast() {
         x1 = x1+dim*6;
@@ -225,6 +236,7 @@ class Tblock: public block {
         y4 = 10+dim;
         highest_y = y4;
         setType(7);
+        setRot(2);
     }
     void EstablishWest() {
         x1 = x1+dim*6;
@@ -237,6 +249,7 @@ class Tblock: public block {
         y4 = 10+dim;
         highest_y = y2;
         setType(7);
+        setRot(4);
     }
     void EstablishSouth() {
         x1 = x1+dim*5;
@@ -249,8 +262,25 @@ class Tblock: public block {
         y4 = 10;
         highest_y = y1;
         setType(7);
+        setRot(3);
     }
-
+    void Establish() {
+        int dir = randest();
+        switch (dir) {
+            case 1:
+                EstablishNorth();
+                break;
+            case 2:
+                EstablishEast();
+                break;
+            case 3:
+                EstablishSouth();
+                break;
+            case 4:
+                EstablishWest();
+                break;
+        }
+    }
     //You could probably combine
     // the below functions by establishing 
     // a boolean param passed in (8 to 4 methods)
@@ -411,6 +441,23 @@ class LRblock: public block {
         highest_y = y1;
         setType(1);
     }
+    void Establish() {
+        int dir = randest();
+        switch (dir) {
+            case 1:
+                EstablishNorth();
+                break;
+            case 2:
+                EstablishEast();
+                break;
+            case 3:
+                EstablishSouth();
+                break;
+            case 4:
+                EstablishWest();
+                break;
+        }
+    }
 
     //You could probably combine
     // the below functions by establishing 
@@ -536,6 +583,7 @@ class LLblock: public block {
         y4 = y3+dim;
         highest_y = y4;
         setType(2);
+        setRot(4);
     }
     void EstablishEast() {
         x1 = x1+dim*6;
@@ -548,6 +596,7 @@ class LLblock: public block {
         y4 = y3-dim;
         highest_y = y1;
         setType(2);
+        setRot(2);
     }
     void EstablishNorth() {
         x1 = x1+dim*5;
@@ -560,6 +609,7 @@ class LLblock: public block {
         y4 = 10;
         highest_y = y4;
         setType(2);
+        setRot(1);
     }
     void EstablishSouth() {
         x1 = x1+dim*4;
@@ -572,8 +622,26 @@ class LLblock: public block {
         y4 = y3;
         highest_y = y1;
         setType(2);
+        setRot(3);
     }
 
+    void Establish() {
+        int dir = randest();
+        switch (dir) {
+            case 1:
+                EstablishNorth();
+                break;
+            case 2:
+                EstablishEast();
+                break;
+            case 3:
+                EstablishSouth();
+                break;
+            case 4:
+                EstablishWest();
+                break;
+        }
+    }
     //You could probably combine
     // the below functions by establishing 
     // a boolean param passed in (8 to 4 methods)
@@ -698,6 +766,7 @@ class Sblock: public block {
         y4 = y3;
         highest_y = y1;
         setType(3);
+        setRot(4);
     }
     void EstablishEast() {
         x1 = x1+dim*6;
@@ -710,6 +779,7 @@ class Sblock: public block {
         y4 = 10;
         highest_y = y4;
         setType(3);
+        setRot(2);
     }
     void EstablishNorth() {
         x1 = x1+dim*4;
@@ -722,6 +792,7 @@ class Sblock: public block {
         y4 = 10+dim;
         highest_y = y4;
         setType(3);
+        setRot(1);
     }
     void EstablishSouth() {
         x1 = x1+dim*6;
@@ -734,6 +805,24 @@ class Sblock: public block {
         y4 = y3-dim;
         highest_y = y1;
         setType(3);
+        setRot(3);
+    }
+    void Establish() {
+        int dir = randest();
+        switch (dir) {
+            case 1:
+                EstablishNorth();
+                break;
+            case 2:
+                EstablishEast();
+                break;
+            case 3:
+                EstablishSouth();
+                break;
+            case 4:
+                EstablishWest();
+                break;
+        }
     }
 
     //You could probably combine
@@ -860,6 +949,7 @@ class Zblock: public block {
         y4 = 10;
         highest_y = y4;
         setType(4);
+        setRot(4);
     }
     void EstablishEast() {
         x1 = x1+dim*6;
@@ -872,6 +962,7 @@ class Zblock: public block {
         y4 = y3;
         highest_y = y1;
         setType(4);
+        setRot(2);
     }
     void EstablishNorth() {
         x1 = x1+dim*5;
@@ -884,6 +975,7 @@ class Zblock: public block {
         y4 = 10+dim;
         highest_y = y4;
         setType(4);
+        setRot(1);
     }
     void EstablishSouth() {
         x1 = x1+dim*5;
@@ -896,7 +988,29 @@ class Zblock: public block {
         y4 = y3-dim;
         highest_y = y1;
         setType(4);
+        setRot(3);
     }
+
+    void Establish() {
+        int dir = randest();
+        switch (dir) {
+            case 1:
+                EstablishNorth();
+                break;
+            case 2:
+                EstablishEast();
+                break;
+            case 3:
+                EstablishSouth();
+                break;
+            case 4:
+                EstablishWest();
+                break;
+        }
+    }
+
+
+
 
     //You could probably combine
     // the below functions by establishing 
@@ -1039,6 +1153,7 @@ class Iblock: public block {
         y4 = 10+dim;
         highest_y = y4;
         setType(6);
+        setRot(1);
 
     }
     void EstablishEW() {
@@ -1052,5 +1167,24 @@ class Iblock: public block {
         y4 = 10;
         highest_y = y4;
         setType(6);
+        setRot(2);
+    }
+
+     void Establish() {
+        int dir = randest();
+        switch (dir) {
+            case 1:
+                EstablishNS();
+                break;
+            case 2:
+                EstablishEW();
+                break;
+            case 3:
+                EstablishNS();
+                break;
+            case 4:
+                EstablishEW();
+                break;
+        }
     }
 };
