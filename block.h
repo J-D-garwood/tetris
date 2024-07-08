@@ -145,6 +145,13 @@ public:
         }
     }
 
+    void Hold_moveToRight(spaces& array) {
+
+    }
+    void Hold_moveToLeft(spaces& array) {
+        
+    }
+
     void stopblock() {
         stopped = true;
     }

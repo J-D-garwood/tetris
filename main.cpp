@@ -11,6 +11,9 @@ const int WIDTH = 600, HEIGHT = 550;
 const int BOARD_HEIGHT = 392+28*4;
 const int BOARD_WIDTH = 280; 
 
+//int rightHoldMoveCount = 0;
+//int leftHoldMoveCount = 0;
+
 bool gameOn =  true;
 bool start = true;
 
@@ -79,7 +82,8 @@ int checkblockpos(spaces& array, block b) {
     return 0;
 }
 // Move block sprite every 100 milliseconds
-const Uint32 MOVE_INTERVAL = 500;
+Uint32 MOVE_INTERVAL = 500;
+Uint32 SHIFT_INTERVAL = 00;
 
 int randomBlockSelect() {
     srand (time(NULL));
@@ -419,6 +423,8 @@ int main( int argc, char *argv[] )
 
     SDL_Rect board = { (WIDTH / 2 - BOARD_WIDTH / 2), 10, BOARD_WIDTH, BOARD_HEIGHT };
     Uint32 lastMoveTime = 0;
+    Uint32 lastMoveTime2 = 0;
+
 
 
     SDL_Event windowEvent;
@@ -432,7 +438,7 @@ int main( int argc, char *argv[] )
                 break;
             }
 
-    const Uint8* keystate = SDL_GetKeyboardState(NULL);
+    //const Uint8* keystate = SDL_GetKeyboardState(NULL);
     //more work to be done on this^^^
     //continuous-response keys
             
@@ -442,7 +448,7 @@ int main( int argc, char *argv[] )
                 {
                     case SDLK_LEFT:
                         //second.moveToLeft(SPACES);
-                        LeftActiveBlock(SPACES, currentBlock);
+                        //LeftActiveBlock(SPACES, currentBlock);
                         break;
                     case SDLK_DOWN:
                         break;
@@ -450,11 +456,27 @@ int main( int argc, char *argv[] )
                         break;
                     case SDLK_RIGHT:
                         //second.moveToRight(SPACES);
-                        RightActiveBlock(SPACES, currentBlock);
+                        //RightActiveBlock(SPACES, currentBlock);
                         break;
                 }
             }
             
+        }
+        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+        if (keystate[SDL_SCANCODE_DOWN]) {
+            //std::cout << "Down arrow key is pressed" << std::endl;
+            MOVE_INTERVAL = 50;
+        } else {
+            MOVE_INTERVAL = 500;
+        }
+        Uint32 currentTime = SDL_GetTicks();
+        if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
+        if (keystate[SDL_SCANCODE_RIGHT]) {
+            RightActiveBlock(SPACES, currentBlock);
+        } else if (keystate[SDL_SCANCODE_LEFT]) {
+            LeftActiveBlock(SPACES, currentBlock);
+        }
+        lastMoveTime2 = currentTime;
         }
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
@@ -489,7 +511,6 @@ int main( int argc, char *argv[] )
                     start = true;
                 }
         }
-        Uint32 currentTime = SDL_GetTicks();
         if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
             moveActiveBlock(currentBlock);
             lastMoveTime = currentTime;
