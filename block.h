@@ -175,11 +175,7 @@ public:
     }
 
     void stopblock() {
-        if (stopcount == 400) {
-            stopped = true;
-        } else {
-            ++stopcount;
-        }
+        stopped = true;
     }
     int checkpos() {
         if (highest_y+28==392+28*4+10) {
