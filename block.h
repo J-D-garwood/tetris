@@ -56,18 +56,22 @@ public:
             case 1:
                 NE();
                 setRot(2);
+                cout << "NE" << endl;
                 break;
             case 2:
                 ES();
                 setRot(3);
+                cout << "ES" << endl;
                 break;
             case 3:
                 SW();
                 setRot(4);
+                cout << "SW" << endl;
                 break;
             case 4:
                 WN();
                 setRot(1);
+                cout << "WN" << endl;
                 break;
         }
     }
@@ -283,11 +287,11 @@ class Tblock: public block {
         x1 = x1+dim*6;
         y1 = 10;
         x2 = x1+dim;
-        y2 = 10-dim;
+        y2 = 10+dim;
         x3 = x2;
         y3 = 10;
         x4 = x3;
-        y4 = 10+dim;
+        y4 = 10-dim;
         highest_y = y4;
         setType(7);
         setRot(4);
@@ -323,16 +327,49 @@ class Tblock: public block {
         }
     }
     void NE() {
-            
+            x1 = x1+dim;
+            y1 = y1+dim;
+            x2 = x2+dim;
+            y2 = y2-dim;
+            x3 = x3;
+            y3 = y3;
+            x4 = x4-dim;
+            y4 = y4+dim;
+            highest_y = y4;
     }
     void ES() {
-
+            x1 = x1-dim;
+            y1 = y1+dim;
+            x2 = x2+dim;
+            y2 = y2+dim;
+            x3 = x3;
+            y3 = y3;
+            x4 = x4-dim;
+            y4 = y4-dim;
+            highest_y = y1;
+            setRot(3);
     }
     void SW() {
-
+            x1 = x1-dim;
+            y1 = y1-dim;
+            x2 = x2-dim;
+            y2 = y2+dim;
+            x3 = x3;
+            y3 = y3;
+            x4 = x4+dim;
+            y4 = y4-dim;
+            highest_y = y2;
     }
     void WN() {
-        
+            x1 = x1+dim;
+            y1 = y1-dim;
+            x2 = x2-dim;
+            y2 = y2-dim;
+            x3 = x3;
+            y3 = y3;
+            x4 = x4+dim;
+            y4 = y4+dim;
+            highest_y = y4;
     }
 };
 
@@ -350,6 +387,7 @@ class LRblock: public block {
         y4 = y3-dim;
         highest_y = y3;
         setType(1);
+        setRot(4);
     }
     void EstablishEast() {
         x1 = x1+dim*6;
@@ -362,6 +400,7 @@ class LRblock: public block {
         y4 = y3+dim;
         highest_y = y4;
         setType(1);
+        setRot(2);
     }
     void EstablishNorth() {
         x1 = x1+dim*5;
@@ -374,6 +413,7 @@ class LRblock: public block {
         y4 = 10;
         highest_y = y4;
         setType(1);
+        setRot(1);
     }
     void EstablishSouth() {
         x1 = x1+dim*4;
@@ -386,6 +426,7 @@ class LRblock: public block {
         y4 = y3;
         highest_y = y1;
         setType(1);
+        setRot(3);
     }
     void Establish() {
         int dir = randest();
@@ -406,16 +447,45 @@ class LRblock: public block {
     }
 
     void NE() {
-            
+            x1 = x1+2*dim;
+            y1 = y1+dim;
+            x2 = x2+dim;
+            y2 = y2;
+            x3 = x3;
+            y3 = y3 - dim;
+            x4 = x4 - dim;
+            highest_y = y4;
     }
     void ES() {
-
+            x1 = x1-dim;
+            y1 = y1+2*dim;
+            x2 = x2;
+            y2 = y2+dim;
+            x3 = x3+dim;
+            y3 = y3;
+            y4 = y4 - dim;
+            highest_y = y1;
     }
     void SW() {
-
+            x1 = x1-2*dim;
+            y1 = y1-dim;
+            x2 = x2-dim;
+            y2 = y2;
+            x3 = x3;
+            y3 = y3+dim;
+            x4 = x4 + dim;
+            highest_y = y1;
     }
     void WN() {
-        
+        x1 = x1+dim;
+        y1 = y1-2*dim;
+        x2 = x2;
+        y2 = y2-dim;
+        x3 = x3-dim;
+        y3 = y3;
+        x4 = x4;
+        y4 = y4+dim;
+        highest_y = y4;
     }
 };
 

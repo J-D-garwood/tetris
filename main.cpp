@@ -42,6 +42,7 @@ void setSpaces(spaces& array, int x, int y) {
     }
 }
 
+
 int checkblockpos(spaces& array, block b) {
     int x1_Update = (b.x1-160)/28;
     int y1_Update = (b.y1-10)/28;
@@ -88,7 +89,7 @@ Uint32 SHIFT_INTERVAL = 00;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
-    return 7;
+    return 1;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -183,6 +184,38 @@ int BLOCKtoblock(block b) {
         all_blocks.push_back(C);
         all_blocks.push_back(D);
         return 0;
+}
+
+int checkOneLine(spaces& array, int line) {
+    int count = 0;
+    for (int i = 0; i<10; ++i) {
+        if (array[i][line]==1) {
+            ++count;
+        }
+    }
+    if (count==10) {
+        //SOMETHING NEEDS TO GO HERE??
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void checkAllLines(spaces& array) {
+    for (int i = 0; i<18; ++i) {
+        int lineFull = checkOneLine(array, i);
+        if (lineFull) {
+            int yEquiv = (i*28)+10;
+            for (int j = 0; j<all_blocks.size(); ++j) {
+                if(all_blocks[j].y1==yEquiv) {
+                    all_blocks.erase(all_blocks.begin()+j);
+                }
+                if(all_blocks[j].y1<yEquiv) {
+                    all_blocks[j].moveDown();
+                }
+            }
+        }
+    }
 }
 int drawActiveBlock(int currentblock ,SDL_Renderer *rend) {
     switch (currentblock) {
@@ -545,6 +578,7 @@ int main( int argc, char *argv[] )
             moveActiveBlock(currentBlock);
             lastMoveTime = currentTime;
         }
+        checkAllLines(SPACES);
         drawAllblocks(renderer);
         SDL_RenderPresent(renderer);
     }
