@@ -88,6 +88,7 @@ Uint32 SHIFT_INTERVAL = 00;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
+    return 7;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -299,6 +300,34 @@ int RightActiveBlock(spaces& array, int currentblock) {
     return 0;
 }
 
+int rotateActiveBlock(spaces& array, int currentblock) {
+    switch (currentblock) {
+        case 1:
+            all_LR_blocks[all_LR_blocks.size()-1].rotate();
+            break;
+        case 2:
+            all_LL_blocks[all_LL_blocks.size()-1].rotate();
+            break;
+        case 3:
+            all_S_blocks[all_S_blocks.size()-1].rotate();
+            break;
+        case 4:
+            all_Z_blocks[all_Z_blocks.size()-1].rotate();
+            break;
+        case 5:
+            all_O_blocks[all_O_blocks.size()-1].rotate();
+            break;
+        case 6: 
+            all_I_blocks[all_I_blocks.size()-1].rotate();
+            break;
+        case 7:
+            all_T_blocks[all_T_blocks.size()-1].rotate();
+            break;
+        ;
+    }
+    return 0;
+}
+
 int checkActiveBlock(spaces& array, int currentblock) {
     int stopFlag = 0;
     switch (currentblock) {
@@ -448,15 +477,16 @@ int main( int argc, char *argv[] )
                 {
                     case SDLK_LEFT:
                         //second.moveToLeft(SPACES);
-                        //LeftActiveBlock(SPACES, currentBlock);
+                        LeftActiveBlock(SPACES, currentBlock);
                         break;
                     case SDLK_DOWN:
                         break;
                     case SDLK_UP:
+                         rotateActiveBlock(SPACES, currentBlock);
                         break;
                     case SDLK_RIGHT:
                         //second.moveToRight(SPACES);
-                        //RightActiveBlock(SPACES, currentBlock);
+                        RightActiveBlock(SPACES, currentBlock);
                         break;
                 }
             }
@@ -470,14 +500,14 @@ int main( int argc, char *argv[] )
             MOVE_INTERVAL = 500;
         }
         Uint32 currentTime = SDL_GetTicks();
-        if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
+        /*if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
         if (keystate[SDL_SCANCODE_RIGHT]) {
             RightActiveBlock(SPACES, currentBlock);
         } else if (keystate[SDL_SCANCODE_LEFT]) {
             LeftActiveBlock(SPACES, currentBlock);
         }
         lastMoveTime2 = currentTime;
-        }
+        }*/
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
 

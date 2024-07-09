@@ -11,6 +11,7 @@ using std::endl;
 class block{
 public:
     bool stopped;
+    int stopcount = 0;
     int dim = 28;
     int x1;
     int y1;
@@ -48,6 +49,27 @@ public:
     }
     void setRot(int r) {
         rotation = r;
+    }
+
+    void rotate() {
+        switch (rotation) {
+            case 1:
+                NE();
+                setRot(2);
+                break;
+            case 2:
+                ES();
+                setRot(3);
+                break;
+            case 3:
+                SW();
+                setRot(4);
+                break;
+            case 4:
+                WN();
+                setRot(1);
+                break;
+        }
     }
     void innerBoxCol(SDL_Renderer *rend, int type) {
         switch (type) {
@@ -153,11 +175,15 @@ public:
     }
 
     void stopblock() {
-        stopped = true;
+        if (stopcount == 400) {
+            stopped = true;
+        } else {
+            ++stopcount;
+        }
     }
     int checkpos() {
         if (highest_y+28==392+28*4+10) {
-            stopped = true;
+            stopblock();
             return 1;
         }
         return 0;
@@ -214,6 +240,18 @@ public:
         SDL_RenderFillRect(rend, &H);
         } 
     }
+    virtual void NE() {
+
+    }
+    virtual void ES() {
+
+    }
+    virtual void SW() {
+
+    }
+    virtual void WN() {
+        
+    }
 };
 
 class Tblock: public block {
@@ -254,7 +292,7 @@ class Tblock: public block {
         y3 = 10;
         x4 = x3;
         y4 = 10+dim;
-        highest_y = y2;
+        highest_y = y4;
         setType(7);
         setRot(4);
     }
@@ -288,112 +326,17 @@ class Tblock: public block {
                 break;
         }
     }
-    //You could probably combine
-    // the below functions by establishing 
-    // a boolean param passed in (8 to 4 methods)
-    void EasttoSouthArrange(bool clockwise) {
-        // south to east
-        if(clockwise) {
-            x1-=dim;
-            y1+=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 += dim;
-            y3 -= dim;
-            x4 += 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        } 
-        //south to east
-        else {
-            x1+=dim;
-            y1-=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 -= dim;
-            y3 += dim;
-            x4 -= 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        }
+    void NE() {
+            
     }
-    void NorthtoEastArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1=x1;
-            y1+=2*dim; 
-            x2 -= dim;
-            y2 += dim;
-            x3 -= 2*dim;
-            y3 = y3;
-            x4 -= dim; 
-            y4 -= dim;
-            highest_y = y1;
-        } 
-        //east to north
-        else {
-            x1=x1;
-            y1-=2*dim; 
-            x2 += dim;
-            y2 -= dim;
-            x3 += 2*dim;
-            y3 = y3;
-            x4 += dim; 
-            y4 += dim;
-            highest_y = y4;
-        }
+    void ES() {
+
     }
-    void WesttoNorthArrange(bool clockwise) {
-        // north to east
-        if(clockwise) {
-            x1+=2*dim;
-            y1-=dim; 
-            x2 += dim;
-            y2 = y2;
-            x3 = x3;
-            y3 += dim;
-            x4 -= dim; 
-            y4 = y4;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1-=2*dim;
-            y1+=dim; 
-            x2 -= dim;
-            y2 = y2;
-            x3 = x3;
-            y3 -= dim;
-            x4 += dim; 
-            y4 = y4;
-            highest_y = y4;
-        }
+    void SW() {
+
     }
-    void SouthtoWestArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1-=dim;
-            y1-=2*dim; 
-            x2 = x2;
-            y2 -= dim;
-            x3 += dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 += dim;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1+=dim;
-            y1+=2*dim; 
-            x2 = x2;
-            y2 += dim;
-            x3 -= dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 -= dim;
-            highest_y = y1;
-        }
+    void WN() {
+        
     }
 };
 
@@ -466,112 +409,17 @@ class LRblock: public block {
         }
     }
 
-    //You could probably combine
-    // the below functions by establishing 
-    // a boolean param passed in (8 to 4 methods)
-    void EasttoSouthArrange(bool clockwise) {
-        // south to east
-        if(clockwise) {
-            x1-=dim;
-            y1+=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 += dim;
-            y3 -= dim;
-            x4 += 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        } 
-        //south to east
-        else {
-            x1+=dim;
-            y1-=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 -= dim;
-            y3 += dim;
-            x4 -= 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        }
+    void NE() {
+            
     }
-    void NorthtoEastArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1=x1;
-            y1+=2*dim; 
-            x2 -= dim;
-            y2 += dim;
-            x3 -= 2*dim;
-            y3 = y3;
-            x4 -= dim; 
-            y4 -= dim;
-            highest_y = y1;
-        } 
-        //east to north
-        else {
-            x1=x1;
-            y1-=2*dim; 
-            x2 += dim;
-            y2 -= dim;
-            x3 += 2*dim;
-            y3 = y3;
-            x4 += dim; 
-            y4 += dim;
-            highest_y = y4;
-        }
+    void ES() {
+
     }
-    void WesttoNorthArrange(bool clockwise) {
-        // north to east
-        if(clockwise) {
-            x1+=2*dim;
-            y1-=dim; 
-            x2 += dim;
-            y2 = y2;
-            x3 = x3;
-            y3 += dim;
-            x4 -= dim; 
-            y4 = y4;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1-=2*dim;
-            y1+=dim; 
-            x2 -= dim;
-            y2 = y2;
-            x3 = x3;
-            y3 -= dim;
-            x4 += dim; 
-            y4 = y4;
-            highest_y = y4;
-        }
+    void SW() {
+
     }
-    void SouthtoWestArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1-=dim;
-            y1-=2*dim; 
-            x2 = x2;
-            y2 -= dim;
-            x3 += dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 += dim;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1+=dim;
-            y1+=2*dim; 
-            x2 = x2;
-            y2 += dim;
-            x3 -= dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 -= dim;
-            highest_y = y1;
-        }
+    void WN() {
+        
     }
 };
 
@@ -649,112 +497,17 @@ class LLblock: public block {
                 break;
         }
     }
-    //You could probably combine
-    // the below functions by establishing 
-    // a boolean param passed in (8 to 4 methods)
-    void EasttoSouthArrange(bool clockwise) {
-        // south to east
-        if(clockwise) {
-            x1-=dim;
-            y1+=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 += dim;
-            y3 -= dim;
-            x4 += 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        } 
-        //south to east
-        else {
-            x1+=dim;
-            y1-=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 -= dim;
-            y3 += dim;
-            x4 -= 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        }
+    void NE() {
+            
     }
-    void NorthtoEastArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1=x1;
-            y1+=2*dim; 
-            x2 -= dim;
-            y2 += dim;
-            x3 -= 2*dim;
-            y3 = y3;
-            x4 -= dim; 
-            y4 -= dim;
-            highest_y = y1;
-        } 
-        //east to north
-        else {
-            x1=x1;
-            y1-=2*dim; 
-            x2 += dim;
-            y2 -= dim;
-            x3 += 2*dim;
-            y3 = y3;
-            x4 += dim; 
-            y4 += dim;
-            highest_y = y4;
-        }
+    void ES() {
+
     }
-    void WesttoNorthArrange(bool clockwise) {
-        // north to east
-        if(clockwise) {
-            x1+=2*dim;
-            y1-=dim; 
-            x2 += dim;
-            y2 = y2;
-            x3 = x3;
-            y3 += dim;
-            x4 -= dim; 
-            y4 = y4;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1-=2*dim;
-            y1+=dim; 
-            x2 -= dim;
-            y2 = y2;
-            x3 = x3;
-            y3 -= dim;
-            x4 += dim; 
-            y4 = y4;
-            highest_y = y4;
-        }
+    void SW() {
+
     }
-    void SouthtoWestArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1-=dim;
-            y1-=2*dim; 
-            x2 = x2;
-            y2 -= dim;
-            x3 += dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 += dim;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1+=dim;
-            y1+=2*dim; 
-            x2 = x2;
-            y2 += dim;
-            x3 -= dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 -= dim;
-            highest_y = y1;
-        }
+    void WN() {
+        
     }
 };
 
@@ -831,113 +584,17 @@ class Sblock: public block {
                 break;
         }
     }
+    void NE() {
+            
+    }
+    void ES() {
 
-    //You could probably combine
-    // the below functions by establishing 
-    // a boolean param passed in (8 to 4 methods)
-    void EasttoSouthArrange(bool clockwise) {
-        // south to east
-        if(clockwise) {
-            x1-=dim;
-            y1+=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 += dim;
-            y3 -= dim;
-            x4 += 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        } 
-        //south to east
-        else {
-            x1+=dim;
-            y1-=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 -= dim;
-            y3 += dim;
-            x4 -= 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        }
     }
-    void NorthtoEastArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1=x1;
-            y1+=2*dim; 
-            x2 -= dim;
-            y2 += dim;
-            x3 -= 2*dim;
-            y3 = y3;
-            x4 -= dim; 
-            y4 -= dim;
-            highest_y = y1;
-        } 
-        //east to north
-        else {
-            x1=x1;
-            y1-=2*dim; 
-            x2 += dim;
-            y2 -= dim;
-            x3 += 2*dim;
-            y3 = y3;
-            x4 += dim; 
-            y4 += dim;
-            highest_y = y4;
-        }
+    void SW() {
+
     }
-    void WesttoNorthArrange(bool clockwise) {
-        // north to east
-        if(clockwise) {
-            x1+=2*dim;
-            y1-=dim; 
-            x2 += dim;
-            y2 = y2;
-            x3 = x3;
-            y3 += dim;
-            x4 -= dim; 
-            y4 = y4;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1-=2*dim;
-            y1+=dim; 
-            x2 -= dim;
-            y2 = y2;
-            x3 = x3;
-            y3 -= dim;
-            x4 += dim; 
-            y4 = y4;
-            highest_y = y4;
-        }
-    }
-    void SouthtoWestArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1-=dim;
-            y1-=2*dim; 
-            x2 = x2;
-            y2 -= dim;
-            x3 += dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 += dim;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1+=dim;
-            y1+=2*dim; 
-            x2 = x2;
-            y2 += dim;
-            x3 -= dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 -= dim;
-            highest_y = y1;
-        }
+    void WN() {
+        
     }
 };
 
@@ -1016,115 +673,17 @@ class Zblock: public block {
         }
     }
 
-
-
-
-    //You could probably combine
-    // the below functions by establishing 
-    // a boolean param passed in (8 to 4 methods)
-    void EasttoSouthArrange(bool clockwise) {
-        // south to east
-        if(clockwise) {
-            x1-=dim;
-            y1+=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 += dim;
-            y3 -= dim;
-            x4 += 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        } 
-        //south to east
-        else {
-            x1+=dim;
-            y1-=dim; 
-            x2 = x2;
-            y2 = y2;
-            x3 -= dim;
-            y3 += dim;
-            x4 -= 2*dim; 
-            y4 = y4;
-            highest_y = y1;
-        }
+    void NE() {
+            
     }
-    void NorthtoEastArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1=x1;
-            y1+=2*dim; 
-            x2 -= dim;
-            y2 += dim;
-            x3 -= 2*dim;
-            y3 = y3;
-            x4 -= dim; 
-            y4 -= dim;
-            highest_y = y1;
-        } 
-        //east to north
-        else {
-            x1=x1;
-            y1-=2*dim; 
-            x2 += dim;
-            y2 -= dim;
-            x3 += 2*dim;
-            y3 = y3;
-            x4 += dim; 
-            y4 += dim;
-            highest_y = y4;
-        }
+    void ES() {
+
     }
-    void WesttoNorthArrange(bool clockwise) {
-        // north to east
-        if(clockwise) {
-            x1+=2*dim;
-            y1-=dim; 
-            x2 += dim;
-            y2 = y2;
-            x3 = x3;
-            y3 += dim;
-            x4 -= dim; 
-            y4 = y4;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1-=2*dim;
-            y1+=dim; 
-            x2 -= dim;
-            y2 = y2;
-            x3 = x3;
-            y3 -= dim;
-            x4 += dim; 
-            y4 = y4;
-            highest_y = y4;
-        }
+    void SW() {
+
     }
-    void SouthtoWestArrange(bool clockwise) {
-        // north to east
-        if(!clockwise) {
-            x1-=dim;
-            y1-=2*dim; 
-            x2 = x2;
-            y2 -= dim;
-            x3 += dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 += dim;
-            highest_y = y4;
-        } 
-        //east to north
-        else {
-            x1+=dim;
-            y1+=2*dim; 
-            x2 = x2;
-            y2 += dim;
-            x3 -= dim;
-            y3 = y3;
-            x4 = x4; 
-            y4 -= dim;
-            highest_y = y1;
-        }
+    void WN() {
+        
     }
 };
 
@@ -1143,6 +702,14 @@ class Oblock: public block {
         y4 = 10;
         highest_y = y4;
         setType(5);
+    }
+    void NE() {
+    }
+    void ES() {
+    }
+    void SW() {
+    }
+    void WN() {
     }
 };
 
@@ -1193,5 +760,13 @@ class Iblock: public block {
                 EstablishEW();
                 break;
         }
+    }
+    void NE() {
+    }
+    void ES() {
+    }
+    void SW() {
+    }
+    void WN() {
     }
 };
