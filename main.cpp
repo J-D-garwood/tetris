@@ -247,13 +247,9 @@ void checkAllLines(spaces& array) {
             all_blocks.erase(new_end, all_blocks.end());
             cout << all_blocks.size() << endl;
             for (block b : all_blocks) {
-                b.moveSingle();
+                //b.moveSingle();
+                b.y1 += 56;
                 cout << b.y1 << " ";
-                /*if(b.y1<yEquiv) {
-                    cout << b.y1 << " ";
-                    b.moveSingle();
-                    cout << b.y1 << " " << endl;
-                }*/
             }
             printSpaces(array);
 
