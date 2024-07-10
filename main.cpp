@@ -4,6 +4,7 @@
 #include "block.h"
 #include <string>
 #include <stdlib.h>
+#include <algorithm>
 using std::cout;
 using std::endl;
 
@@ -39,6 +40,15 @@ void setSpaces(spaces& array, int x, int y) {
                 array[i][j] = 1;
             }
         }
+    }
+}
+
+void printSpaces(spaces& array) {
+    for (int i = 0; i < 18; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            cout << array[j][i];
+        }
+        cout << endl;
     }
 }
 
@@ -201,22 +211,55 @@ int checkOneLine(spaces& array, int line) {
     }
 }
 
+bool blockToBeRemoved(block b, int Yval) {
+    return b.y1==Yval;
+}
+
 void checkAllLines(spaces& array) {
+
     for (int i = 0; i<18; ++i) {
         int lineFull = checkOneLine(array, i);
         if (lineFull) {
-            int yEquiv = (i*28)+10;
-            for (int j = 0; j<all_blocks.size(); ++j) {
-                if(all_blocks[j].y1==yEquiv) {
-                    all_blocks.erase(all_blocks.begin()+j);
-                }
-                if(all_blocks[j].y1<yEquiv) {
-                    all_blocks[j].moveDown();
-                }
+            //printSpaces(array);
+            //cout<<""<<endl;
+            for (int l = 0; l<10; ++l) {
+                array[l][i] = 0;
             }
+            int del = i-1;
+            while (del>1) {
+                for (int x = 0; x<10; ++x) {
+                    int sq = array[x][del];
+                    if (sq==1) {
+                        array[x][del] = 0;
+                        if (del<18) {
+                        array[x][del+1] = 1;
+                        }
+                    }
+                }
+                --del;
+            }
+            int yEquiv = (i*28)+10;
+            auto condition = [yEquiv](block b) {
+                return b.y1 == yEquiv;
+            };
+            auto new_end = std::remove_if(all_blocks.begin(), all_blocks.end(), condition);
+            cout << all_blocks.size() << endl;
+            all_blocks.erase(new_end, all_blocks.end());
+            cout << all_blocks.size() << endl;
+            for (block b : all_blocks) {
+                b.moveSingle();
+                cout << b.y1 << " ";
+                /*if(b.y1<yEquiv) {
+                    cout << b.y1 << " ";
+                    b.moveSingle();
+                    cout << b.y1 << " " << endl;
+                }*/
+            }
+            printSpaces(array);
+
+        }
         }
     }
-}
 int drawActiveBlock(int currentblock ,SDL_Renderer *rend) {
     switch (currentblock) {
         case 1:
@@ -452,9 +495,8 @@ int checkActiveBlock(spaces& array, int currentblock) {
     return stopFlag;
 }
 void drawAllblocks(SDL_Renderer *rend) {
-    for (int i = 0; i<all_blocks.size(); i++) {
-        block b = all_blocks[i];
-        b.draw(rend);
+    for (block b : all_blocks) {
+        b.drawSingle(rend);
     }
 }
 

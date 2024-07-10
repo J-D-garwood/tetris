@@ -56,22 +56,22 @@ public:
             case 1:
                 NE();
                 setRot(2);
-                cout << "NE" << endl;
+                //cout << "NE" << endl;
                 break;
             case 2:
                 ES();
                 setRot(3);
-                cout << "ES" << endl;
+                //cout << "ES" << endl;
                 break;
             case 3:
                 SW();
                 setRot(4);
-                cout << "SW" << endl;
+                //cout << "SW" << endl;
                 break;
             case 4:
                 WN();
                 setRot(1);
-                cout << "WN" << endl;
+                //cout << "WN" << endl;
                 break;
         }
     }
@@ -197,12 +197,15 @@ public:
             highest_y+=dim;
         }      
     }
+    void moveSingle() {
+        y1 = 10;
+    }
     void drawSingle(SDL_Renderer *rend ) {
         SDL_Rect A = {x1, y1, dim, dim};
         SDL_Rect E = {x1+1, y1+1, 26, 26};
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderFillRect(rend, &A);
-        SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
+        innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &E);
     }
 
