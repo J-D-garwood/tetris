@@ -99,7 +99,7 @@ Uint32 SHIFT_INTERVAL = 00;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
-    return 2;
+    return 3;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -243,9 +243,7 @@ void checkAllLines(spaces& array) {
                 return b.y1 == yEquiv;
             };
             auto new_end = std::remove_if(all_blocks.begin(), all_blocks.end(), condition);
-            cout << all_blocks.size() << endl;
             all_blocks.erase(new_end, all_blocks.end());
-            cout << all_blocks.size() << endl;
             std::vector<block> new_all_blocks;
             for (block b: all_blocks) {
                 if (b.y1<yEquiv) {

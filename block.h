@@ -567,16 +567,50 @@ class LLblock: public block {
         }
     }
     void NE() {
-            
-    }
-    void ES() {
+            x1 = x1+dim;
+            y1 = y1+2*dim;
+            x2 = x2;
+            y2 = y2+dim;
+            x3 = x3-=dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 = y4-=dim;
+            highest_y = y1;
 
     }
+    void ES() {
+            x1 = x1-2*dim;
+            y1 = y1+1*dim;
+            x2 = x2-dim;
+            y2 = y2;
+            x3 = x3;
+            y3 = y3-dim;
+            x4 = x4+dim; 
+            y4 = y4;
+            highest_y = y3;
+    }
     void SW() {
+            x1 = x1-dim;
+            y1 = y1-2*dim;
+            x2 = x2;
+            y2 = y2-dim;
+            x3 = x3+dim;
+            y3 = y3;
+            x4 = x4; 
+            y4 = y4+dim;
+            highest_y = y4;
 
     }
     void WN() {
-        
+            x1 = x1+2*dim;
+            y1 = y1-1*dim;
+            x2 = x2+dim;
+            y2 = y2;
+            x3 = x3;
+            y3 = y3+dim;
+            x4 = x4-dim; 
+            y4 = y4;
+            highest_y = y4;
     }
 };
 
@@ -654,16 +688,48 @@ class Sblock: public block {
         }
     }
     void NE() {
-            
+            x1 = x1 + dim;
+            y1 = y1;
+            x2 = x2;
+            y2 = y2-dim;
+            x3 = x3-dim;
+            y3 = y3;
+            x4 = x4-2*dim;
+            y4 = y4-dim;
+            highest_y = y4;
     }
     void ES() {
-
+            x1 = x1;
+            y1 = y1+dim;
+            x2 = x2+dim;
+            y2 = y2;
+            x3 = x3;
+            y3 = y3-dim;
+            x4 = x4+dim;
+            y4 = y4-2*dim;
+            highest_y = y1;
     }
     void SW() {
-
+            x1 = x1-dim;
+            y1 = y1;
+            x2 = x2;
+            y2 = y2+dim;
+            x3 = x3+dim;
+            y3 = y3;
+            x4 = x4+2*dim;
+            y4 = y4+dim;
+            highest_y = y1;
     }
     void WN() {
-        
+            x1 = x1;
+            y1 = y1-2*dim;
+            x2 = x2-dim;
+            y2 = y2-dim;
+            x3 = x3;
+            y3 = y3;
+            x4 = x4-dim;
+            y4 = y4+dim;
+            highest_y = y4;
     }
 };
 
