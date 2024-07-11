@@ -198,7 +198,7 @@ public:
         }      
     }
     void moveSingle() {
-        y1 = 10;
+        y1 += dim;
     }
     void drawSingle(SDL_Renderer *rend ) {
         SDL_Rect A = {x1, y1, dim, dim};

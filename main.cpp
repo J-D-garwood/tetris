@@ -99,7 +99,7 @@ Uint32 SHIFT_INTERVAL = 00;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
-    return 1;
+    return 2;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -246,12 +246,18 @@ void checkAllLines(spaces& array) {
             cout << all_blocks.size() << endl;
             all_blocks.erase(new_end, all_blocks.end());
             cout << all_blocks.size() << endl;
-            for (block b : all_blocks) {
-                //b.moveSingle();
-                b.y1 += 56;
-                cout << b.y1 << " ";
+            std::vector<block> new_all_blocks;
+            for (block b: all_blocks) {
+                if (b.y1<yEquiv) {
+                    block b2 = b;
+                    b2.moveSingle();
+                    new_all_blocks.push_back(b2);
+                } else {
+                    new_all_blocks.push_back(b);
+                }
             }
-            printSpaces(array);
+            all_blocks = new_all_blocks;
+            //printSpaces(array);
 
         }
         }
