@@ -92,14 +92,12 @@ int checkblockpos(spaces& array, block b) {
     }
     return 0;
 }
-// Move block sprite every 100 milliseconds
 Uint32 MOVE_INTERVAL = 500;
 Uint32 SHIFT_INTERVAL = 00;
 
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
-    return 3;
     return num;
 }
 int currentBlock = randomBlockSelect();
