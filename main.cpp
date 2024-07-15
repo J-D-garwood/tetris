@@ -93,7 +93,8 @@ int checkblockpos(spaces& array, block b) {
     return 0;
 }
 Uint32 MOVE_INTERVAL = 500;
-Uint32 SHIFT_INTERVAL = 00;
+Uint32 SHIFT_INTERVAL = MOVE_INTERVAL/2;
+bool movetime = true;
 
 int randomBlockSelect() {
     srand (time(NULL));
@@ -569,18 +570,12 @@ int main( int argc, char *argv[] )
         if (keystate[SDL_SCANCODE_DOWN]) {
             //std::cout << "Down arrow key is pressed" << std::endl;
             MOVE_INTERVAL = 50;
+            SHIFT_INTERVAL = MOVE_INTERVAL/2;
         } else {
             MOVE_INTERVAL = 500;
+            SHIFT_INTERVAL = MOVE_INTERVAL/2;
         }
         Uint32 currentTime = SDL_GetTicks();
-        /*if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
-        if (keystate[SDL_SCANCODE_RIGHT]) {
-            RightActiveBlock(SPACES, currentBlock);
-        } else if (keystate[SDL_SCANCODE_LEFT]) {
-            LeftActiveBlock(SPACES, currentBlock);
-        }
-        lastMoveTime2 = currentTime;
-        }*/
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
 
@@ -597,7 +592,40 @@ int main( int argc, char *argv[] )
             SDL_RenderDrawLine(renderer, (WIDTH / 2 - BOARD_WIDTH / 2), 38+28*i, (WIDTH / 2 - BOARD_WIDTH / 2)+BOARD_WIDTH, 38+28*i);
         }  
 
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
+        if (movetime) {
+            if (start) {
+                if (!GameOverFlag) {
+                    nextBlock = randomBlockSelect();
+                    addToActiveBlocks(nextBlock);
+                    currentBlock = nextBlock;
+                    start = false;
+                }
+            } else {
+                stoppingFlag = checkActiveBlock(SPACES, currentBlock);
+                GameOverFlag = checkTopLvl(SPACES);
+                if (stoppingFlag) {
+                    start = true;
+                }
+        }
+        if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
+            moveActiveBlock(currentBlock);
+            lastMoveTime = currentTime;
+            lastMoveTime2 = lastMoveTime;
+            movetime = false;
+            }
+        
+        } else {
+            if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
+            lastMoveTime2 = currentTime;
+            lastMoveTime = lastMoveTime2;
+            movetime = true;
+            }
+        }
+        checkAllLines(SPACES);
+        drawActiveBlock(currentBlock, renderer);
+        drawAllblocks(renderer);
+        //SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
+        /*
        if (start) {
                 if (!GameOverFlag) {
                     nextBlock = randomBlockSelect();
@@ -618,8 +646,10 @@ int main( int argc, char *argv[] )
             moveActiveBlock(currentBlock);
             lastMoveTime = currentTime;
         }
+
         checkAllLines(SPACES);
         drawAllblocks(renderer);
+        */
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyRenderer(renderer);
