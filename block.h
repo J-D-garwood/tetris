@@ -51,27 +51,46 @@ public:
         rotation = r;
     }
 
+    int checkRotate(spaces& array, int Nx1, int Ny1, int Nx2, int Ny2, int Nx3, int Ny3, int Nx4, int Ny4) {
+        int x1_Update = (Nx1-160)/28;
+        int y1_Update = (Ny1-10)/28;
+        int x2_Update = (Nx2-160)/28;
+        int y2_Update = (Ny2-10)/28;
+        int x3_Update = (Nx3-160)/28;
+        int y3_Update = (Ny3-10)/28;
+        int x4_Update = (Nx4-160)/28;
+        int y4_Update = (Ny4-10)/28;
+        int ys[4] = {y1_Update, y2_Update, y3_Update, y4_Update};
+        int xs[4] = {x1_Update, x2_Update, x3_Update, x4_Update};
+        for (int i = 0; i < 4; ++i) {
+            if (x1_Update<=-1 || x1_Update>=11 ||x2_Update<=-1 || x2_Update>=11 ||x3_Update<=-1 || x3_Update>=11 ||x4_Update<=-1 || x4_Update>=11) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     void rotate() {
         switch (rotation) {
             case 1:
                 NE();
                 setRot(2);
-                cout << "NE" << endl;
+                //cout << "NE" << endl;
                 break;
             case 2:
                 ES();
                 setRot(3);
-                cout << "ES" << endl;
+                //cout << "ES" << endl;
                 break;
             case 3:
                 SW();
                 setRot(4);
-                cout << "SW" << endl;
+                //cout << "SW" << endl;
                 break;
             case 4:
                 WN();
                 setRot(1);
-                cout << "WN" << endl;
+                //cout << "WN" << endl;
                 break;
         }
     }
