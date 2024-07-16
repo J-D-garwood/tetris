@@ -92,7 +92,8 @@ int checkblockpos(spaces& array, block b) {
     }
     return 0;
 }
-Uint32 MOVE_INTERVAL = 500;
+Uint32 initial_MI = 200;
+Uint32 MOVE_INTERVAL = initial_MI;
 Uint32 SHIFT_INTERVAL = MOVE_INTERVAL/2;
 bool movetime = true;
 
@@ -572,7 +573,7 @@ int main( int argc, char *argv[] )
             MOVE_INTERVAL = 50;
             SHIFT_INTERVAL = MOVE_INTERVAL/2;
         } else {
-            MOVE_INTERVAL = 500;
+            MOVE_INTERVAL = initial_MI;
             SHIFT_INTERVAL = MOVE_INTERVAL/2;
         }
         Uint32 currentTime = SDL_GetTicks();
