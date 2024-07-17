@@ -50,7 +50,7 @@ public:
     void setRot(int r) {
         rotation = r;
     }
-
+    //Try this today
     int checkRotate(spaces& array, int Nx1, int Ny1, int Nx2, int Ny2, int Nx3, int Ny3, int Nx4, int Ny4) {
         int x1_Update = (Nx1-160)/28;
         int y1_Update = (Ny1-10)/28;
@@ -62,9 +62,27 @@ public:
         int y4_Update = (Ny4-10)/28;
         int ys[4] = {y1_Update, y2_Update, y3_Update, y4_Update};
         int xs[4] = {x1_Update, x2_Update, x3_Update, x4_Update};
-        for (int i = 0; i < 4; ++i) {
-            if (x1_Update<=-1 || x1_Update>=11 ||x2_Update<=-1 || x2_Update>=11 ||x3_Update<=-1 || x3_Update>=11 ||x4_Update<=-1 || x4_Update>=11) {
+        if (x1_Update<=-1 || x1_Update>=11 ||x2_Update<=-1 || x2_Update>=11 ||x3_Update<=-1 || x3_Update>=11 ||x4_Update<=-1 || x4_Update>=11) {
                 return 1;
+        }
+        for (int i = 0; i<10; ++i) {
+            for (int j = 0; j<18; ++j) {
+                if (array[i][j]==1) {
+                    if (i==x1_Update||i==x2_Update||i==x3_Update||i==x4_Update) {
+                        if (i==x1_Update&&j==y1_Update) {
+                            return 1;
+                        }
+                        else if (i==x2_Update&&j==y2_Update) {
+                            return 1;
+                        }
+                        else if (i==x3_Update&&j==y3_Update) {
+                            return 1;
+                        }
+                        else if (i==x4_Update&&j==y4_Update) {
+                            return 1;
+                        }
+                    }
+                }
             }
         }
         return 0;

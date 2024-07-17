@@ -15,7 +15,7 @@ const int BOARD_WIDTH = 280;
 //int rightHoldMoveCount = 0;
 //int leftHoldMoveCount = 0;
 
-bool gameOn =  false;
+bool gameOn =  true;
 bool start = true;
 
 const Uint8* keystate;
