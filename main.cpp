@@ -15,7 +15,7 @@ const int BOARD_WIDTH = 280;
 //int rightHoldMoveCount = 0;
 //int leftHoldMoveCount = 0;
 
-bool gameOn =  true;
+bool gameOn =  false;
 bool start = true;
 
 const Uint8* keystate;
@@ -533,7 +533,8 @@ int main( int argc, char *argv[] )
 
     SDL_Event windowEvent;
 
-    while ( true )
+    if (gameOn) {
+        while ( gameOn )
     {
         if ( SDL_PollEvent( &windowEvent ) )
         {
@@ -652,6 +653,37 @@ int main( int argc, char *argv[] )
         drawAllblocks(renderer);
         */
         SDL_RenderPresent(renderer);
+    }
+    } else {
+        while (!gameOn) {
+            if ( SDL_PollEvent( &windowEvent ) )
+        {
+            if ( SDL_QUIT == windowEvent.type)
+            {
+                break;
+            }
+
+    //const Uint8* keystate = SDL_GetKeyboardState(NULL);
+    //more work to be done on this^^^
+    //continuous-response keys
+            
+            if (windowEvent.type == SDL_KEYDOWN)
+            {
+                switch (windowEvent.key.keysym.sym)
+                {
+                    case SDLK_LEFT:
+                        break;
+                    case SDLK_DOWN:
+                        break;
+                    case SDLK_UP:
+                        break;
+                    case SDLK_RIGHT:
+                        break;
+                }
+            }
+            
+        }
+        }
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow( window );
