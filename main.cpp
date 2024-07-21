@@ -100,6 +100,7 @@ bool movetime = true;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
+    return 6;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -379,25 +380,25 @@ int RightActiveBlock(spaces& array, int currentblock) {
 int rotateActiveBlock(spaces& array, int currentblock) {
     switch (currentblock) {
         case 1:
-            all_LR_blocks[all_LR_blocks.size()-1].rotate();
+            all_LR_blocks[all_LR_blocks.size()-1].rotate(array);
             break;
         case 2:
-            all_LL_blocks[all_LL_blocks.size()-1].rotate();
+            all_LL_blocks[all_LL_blocks.size()-1].rotate(array);
             break;
         case 3:
-            all_S_blocks[all_S_blocks.size()-1].rotate();
+            all_S_blocks[all_S_blocks.size()-1].rotate(array);
             break;
         case 4:
-            all_Z_blocks[all_Z_blocks.size()-1].rotate();
+            all_Z_blocks[all_Z_blocks.size()-1].rotate(array);
             break;
         case 5:
-            all_O_blocks[all_O_blocks.size()-1].rotate();
+            all_O_blocks[all_O_blocks.size()-1].rotate(array);
             break;
         case 6: 
-            all_I_blocks[all_I_blocks.size()-1].rotate();
+            all_I_blocks[all_I_blocks.size()-1].rotate(array);
             break;
         case 7:
-            all_T_blocks[all_T_blocks.size()-1].rotate();
+            all_T_blocks[all_T_blocks.size()-1].rotate(array);
             break;
         ;
     }

@@ -60,9 +60,10 @@ public:
         int y3_Update = (Ny3-10)/28;
         int x4_Update = (Nx4-160)/28;
         int y4_Update = (Ny4-10)/28;
+        //cout << x1_Update << endl;
         int ys[4] = {y1_Update, y2_Update, y3_Update, y4_Update};
         int xs[4] = {x1_Update, x2_Update, x3_Update, x4_Update};
-        if (x1_Update<=-1 || x1_Update>=11 ||x2_Update<=-1 || x2_Update>=11 ||x3_Update<=-1 || x3_Update>=11 ||x4_Update<=-1 || x4_Update>=11) {
+        if (x1_Update<=-1 || x1_Update>=10 ||x2_Update<=-1 || x2_Update>=10 ||x3_Update<=-1 || x3_Update>=10 ||x4_Update<=-1 || x4_Update>=10) {
                 return 1;
         }
         for (int i = 0; i<10; ++i) {
@@ -88,26 +89,35 @@ public:
         return 0;
     }
 
-    void rotate() {
+    void rotate(spaces& array) {
+        int ok;
         switch (rotation) {
             case 1:
-                NE();
-                setRot(2);
+                ok = NE(array);
+                if (!ok) {
+                    setRot(2);
+                }
                 //cout << "NE" << endl;
                 break;
             case 2:
-                ES();
-                setRot(3);
+                ok = ES(array);
+                if (!ok) {
+                    setRot(3);
+                }
                 //cout << "ES" << endl;
                 break;
             case 3:
-                SW();
-                setRot(4);
+                ok = SW(array);
+                if (!ok) {
+                    setRot(4);
+                }
                 //cout << "SW" << endl;
                 break;
             case 4:
-                WN();
-                setRot(1);
+                ok = WN(array);
+                if (!ok) {
+                    setRot(1);
+                }
                 //cout << "WN" << endl;
                 break;
         }
@@ -280,17 +290,17 @@ public:
         SDL_RenderFillRect(rend, &H);
         } 
     }
-    virtual void NE() {
-
+    virtual int NE(spaces& array) {
+        return 0;
     }
-    virtual void ES() {
-
+    virtual int ES(spaces& array) {
+        return 0;
     }
-    virtual void SW() {
-
+    virtual int SW(spaces& array) {
+        return 0;
     }
-    virtual void WN() {
-        
+    virtual int WN(spaces& array) {
+        return 0;
     }
 };
 class Tblock: public block {
@@ -365,7 +375,7 @@ class Tblock: public block {
                 break;
         }
     }
-    void NE() {
+    int NE(spaces& array) {
             x1 = x1+dim;
             y1 = y1+dim;
             x2 = x2+dim;
@@ -375,8 +385,22 @@ class Tblock: public block {
             x4 = x4-dim;
             y4 = y4+dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-dim;
+                y1 = y1-dim;
+                x2 = x2-dim;
+                y2 = y2+dim;
+                x3 = x3;
+                y3 = y3;
+                x4 = x4+dim;
+                y4 = y4-dim;
+                highest_y = y4;
+                return 1;
+            }
+            return 0;
     }
-    void ES() {
+    int ES(spaces& array) {
             x1 = x1-dim;
             y1 = y1+dim;
             x2 = x2+dim;
@@ -386,9 +410,22 @@ class Tblock: public block {
             x4 = x4-dim;
             y4 = y4-dim;
             highest_y = y1;
-            setRot(3);
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+dim;
+                y1 = y1-dim;
+                x2 = x2-dim;
+                y2 = y2-dim;
+                x3 = x3;
+                y3 = y3;
+                x4 = x4+dim;
+                y4 = y4+dim;
+                highest_y = y4;
+                return 1;
+            }
+            return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
             x1 = x1-dim;
             y1 = y1-dim;
             x2 = x2-dim;
@@ -398,8 +435,22 @@ class Tblock: public block {
             x4 = x4+dim;
             y4 = y4-dim;
             highest_y = y2;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+dim;
+                y1 = y1+dim;
+                x2 = x2+dim;
+                y2 = y2-dim;
+                x3 = x3;
+                y3 = y3;
+                x4 = x4-dim;
+                y4 = y4+dim;
+                highest_y = y1;
+                return 1;
+            }
+            return 0;
     }
-    void WN() {
+    int WN(spaces& array) {
             x1 = x1+dim;
             y1 = y1-dim;
             x2 = x2-dim;
@@ -409,6 +460,20 @@ class Tblock: public block {
             x4 = x4+dim;
             y4 = y4+dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-dim;
+                y1 = y1+dim;
+                x2 = x2+dim;
+                y2 = y2+dim;
+                x3 = x3;
+                y3 = y3;
+                x4 = x4-dim;
+                y4 = y4-dim;
+                highest_y = y2;
+                return 1;
+            }
+            return 0;
     }
 };
 
@@ -485,7 +550,7 @@ class LRblock: public block {
         }
     }
 
-    void NE() {
+    int NE(spaces& array) {
             x1 = x1+2*dim;
             y1 = y1+dim;
             x2 = x2+dim;
@@ -494,8 +559,21 @@ class LRblock: public block {
             y3 = y3 - dim;
             x4 = x4 - dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-2*dim;
+                y1 = y1-dim;
+                x2 = x2-dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3 + dim;
+                x4 = x4 + dim;
+                highest_y = y4;
+                return 1;
+            }
+            return 0;
     }
-    void ES() {
+    int ES(spaces& array) {
             x1 = x1-dim;
             y1 = y1+2*dim;
             x2 = x2;
@@ -504,8 +582,21 @@ class LRblock: public block {
             y3 = y3;
             y4 = y4 - dim;
             highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+dim;
+                y1 = y1-2*dim;
+                x2 = x2;
+                y2 = y2-dim;
+                x3 = x3-dim;
+                y3 = y3;
+                y4 = y4 + dim;
+                highest_y = y4;
+                return 1;
+            }
+            return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
             x1 = x1-2*dim;
             y1 = y1-dim;
             x2 = x2-dim;
@@ -514,8 +605,21 @@ class LRblock: public block {
             y3 = y3+dim;
             x4 = x4 + dim;
             highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+2*dim;
+                y1 = y1+dim;
+                x2 = x2+dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3-dim;
+                x4 = x4 - dim;
+                highest_y = y1;
+                return 1;
+            }
+            return 0;
     }
-    void WN() {
+    int WN(spaces& array) {
         x1 = x1+dim;
         y1 = y1-2*dim;
         x2 = x2;
@@ -525,6 +629,20 @@ class LRblock: public block {
         x4 = x4;
         y4 = y4+dim;
         highest_y = y4;
+        int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+        if (notfine) {
+            x1 = x1-dim;
+            y1 = y1+2*dim;
+            x2 = x2;
+            y2 = y2+dim;
+            x3 = x3+dim;
+            y3 = y3;
+            x4 = x4;
+            y4 = y4-dim;
+            highest_y = y4;
+            return 1;
+        }
+        return 0;
     }
 };
 
@@ -602,7 +720,7 @@ class LLblock: public block {
                 break;
         }
     }
-    void NE() {
+    int NE(spaces& array) {
             x1 = x1+dim;
             y1 = y1+2*dim;
             x2 = x2;
@@ -612,9 +730,22 @@ class LLblock: public block {
             x4 = x4; 
             y4 = y4-=dim;
             highest_y = y1;
-
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-dim;
+                y1 = y1-2*dim;
+                x2 = x2;
+                y2 = y2-dim;
+                x3 = x3+dim;
+                y3 = y3;
+                x4 = x4; 
+                y4 = y4+dim;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
-    void ES() {
+    int ES(spaces& array) {
             x1 = x1-2*dim;
             y1 = y1+1*dim;
             x2 = x2-dim;
@@ -623,9 +754,23 @@ class LLblock: public block {
             y3 = y3-dim;
             x4 = x4+dim; 
             y4 = y4;
-            highest_y = y3;
+            highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+2*dim;
+                y1 = y1-1*dim;
+                x2 = x2+dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3+dim;
+                x4 = x4-dim; 
+                y4 = y4;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
             x1 = x1-dim;
             y1 = y1-2*dim;
             x2 = x2;
@@ -635,9 +780,23 @@ class LLblock: public block {
             x4 = x4; 
             y4 = y4+dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+dim;
+                y1 = y1+2*dim;
+                x2 = x2;
+                y2 = y2+dim;
+                x3 = x3-dim;
+                y3 = y3;
+                x4 = x4; 
+                y4 = y4-dim;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
 
     }
-    void WN() {
+    int WN(spaces& array) {
             x1 = x1+2*dim;
             y1 = y1-1*dim;
             x2 = x2+dim;
@@ -647,6 +806,20 @@ class LLblock: public block {
             x4 = x4-dim; 
             y4 = y4;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-2*dim;
+                y1 = y1+1*dim;
+                x2 = x2-dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3-dim;
+                x4 = x4+dim; 
+                y4 = y4;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
 };
 
@@ -723,7 +896,7 @@ class Sblock: public block {
                 break;
         }
     }
-    void NE() {
+    int NE(spaces& array) {
             x1 = x1 + dim;
             y1 = y1;
             x2 = x2;
@@ -733,8 +906,22 @@ class Sblock: public block {
             x4 = x4-2*dim;
             y4 = y4-dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1 - dim;
+                y1 = y1;
+                x2 = x2;
+                y2 = y2+dim;
+                x3 = x3+dim;
+                y3 = y3;
+                x4 = x4+2*dim;
+                y4 = y4+dim;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
-    void ES() {
+    int ES(spaces& array) {
             x1 = x1;
             y1 = y1+dim;
             x2 = x2+dim;
@@ -744,8 +931,22 @@ class Sblock: public block {
             x4 = x4+dim;
             y4 = y4-2*dim;
             highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1;
+                y1 = y1-dim;
+                x2 = x2-dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3+dim;
+                x4 = x4-dim;
+                y4 = y4+2*dim;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
             x1 = x1-dim;
             y1 = y1;
             x2 = x2;
@@ -755,8 +956,22 @@ class Sblock: public block {
             x4 = x4+2*dim;
             y4 = y4+dim;
             highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+dim;
+                y1 = y1;
+                x2 = x2;
+                y2 = y2-dim;
+                x3 = x3-dim;
+                y3 = y3;
+                x4 = x4-2*dim;
+                y4 = y4-dim;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
     }
-    void WN() {
+    int WN(spaces& array) {
             x1 = x1;
             y1 = y1-2*dim;
             x2 = x2-dim;
@@ -766,6 +981,20 @@ class Sblock: public block {
             x4 = x4-dim;
             y4 = y4+dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1;
+                y1 = y1+2*dim;
+                x2 = x2+dim;
+                y2 = y2+dim;
+                x3 = x3;
+                y3 = y3;
+                x4 = x4+dim;
+                y4 = y4-dim;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
     }
 };
 
@@ -844,7 +1073,7 @@ class Zblock: public block {
         }
     }
 
-    void NE() {
+    int NE(spaces& array) {
             x1 = x1+dim;
             y1 = y1+2*dim;
             x2 = x2;
@@ -854,9 +1083,23 @@ class Zblock: public block {
             x4 = x4;
             y4 = y4-dim;
             highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-dim;
+                y1 = y1-2*dim;
+                x2 = x2;
+                y2 = y2-dim;
+                x3 = x3-dim;
+                y3 = y3;
+                x4 = x4;
+                y4 = y4+dim;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
 
     }
-    void ES() {
+    int ES(spaces& array) {
             x1 = x1-2*dim;
             y1 = y1+dim;
             x2 = x2-dim;
@@ -866,8 +1109,22 @@ class Zblock: public block {
             x4 = x4+dim;
             y4 = y4;
             highest_y = y1;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1+2*dim;
+                y1 = y1-dim;
+                x2 = x2+dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3-dim;
+                x4 = x4-dim;
+                y4 = y4;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
             x1 = x1-dim;
             y1 = y1-dim;
             x2 = x2;
@@ -877,8 +1134,22 @@ class Zblock: public block {
             x4 = x4;
             y4 = y4+2*dim;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                y1 = y1+dim;
+                x1 = x1+dim;
+                x2 = x2;
+                y2 = y2;
+                x3 = x3+dim;
+                y3 = y3-dim;
+                x4 = x4;
+                y4 = y4-2*dim;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
     }
-    void WN() {
+    int WN(spaces& array) {
             x1 = x1+2*dim;
             y1 = y1-dim;
             x2 = x2+dim;
@@ -888,6 +1159,20 @@ class Zblock: public block {
             x4 = x4-dim;
             y4 = y4;
             highest_y = y4;
+            int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1-2*dim;
+                y1 = y1+dim;
+                x2 = x2-dim;
+                y2 = y2;
+                x3 = x3;
+                y3 = y3+dim;
+                x4 = x4+dim;
+                y4 = y4;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
 };
 
@@ -907,13 +1192,17 @@ class Oblock: public block {
         highest_y = y4;
         setType(5);
     }
-    void NE() {
+    int NE(spaces& array) {
+        return 0;
     }
-    void ES() {
+    int ES(spaces& array) {
+        return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
+        return 0;
     }
-    void WN() {
+    int WN(spaces& array) {
+        return 0;
     }
 };
 
@@ -994,7 +1283,7 @@ class Iblock: public block {
                 break;
         }
     }
-    void NE() {
+    int NE(spaces& array) {
         x1 = x1 + dim;
         y1 = y1 + 2*dim;
         x2 = x2;
@@ -1004,8 +1293,22 @@ class Iblock: public block {
         x4 =  x4-2*dim;
         y4 = y4-dim;
         highest_y =y1;
+        int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1 - dim;
+                y1 = y1 - 2*dim;
+                x2 = x2;
+                y2 = y2-dim;
+                x3 =  x3+dim;
+                y3 = y3;
+                x4 =  x4+2*dim;
+                y4 = y4+dim;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
-    void ES() {
+    int ES(spaces& array) {
         x1 = x1 - dim;
         y1 = y1 + dim;
         x2 = x2;
@@ -1015,8 +1318,22 @@ class Iblock: public block {
         x4 =  x4+2*dim;
         y4 = y4-2*dim;
         highest_y =y1;
+        int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1 + dim;
+                y1 = y1 - dim;
+                x2 = x2;
+                y2 = y2;
+                x3 =  x3-dim;
+                y3 = y3+dim;
+                x4 =  x4-2*dim;
+                y4 = y4+2*dim;
+                highest_y = y4;
+            return 1;
+            }
+            return 0;
     }
-    void SW() {
+    int SW(spaces& array) {
         x1 = x1 - 2*dim;
         y1 = y1 - dim;
         x2 = x2-dim;
@@ -1026,8 +1343,23 @@ class Iblock: public block {
         x4 =  x4+dim;
         y4 = y4+2*dim;
         highest_y =y1;
+        int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1 + 2*dim;
+                y1 = y1 + dim;
+                x2 = x2+dim;
+                y2 = y2;
+                x3 =  x3;
+                y3 = y3-dim;
+                x4 =  x4-dim;
+                y4 = y4-2*dim;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
+        
     }
-    void WN() {
+    int WN(spaces& array) {
         x1 = x1 + 2*dim;
         y1 = y1 - 2*dim;
         x2 = x2+dim;
@@ -1037,5 +1369,19 @@ class Iblock: public block {
         x4 =  x4-dim;
         y4 = y4+dim;
         highest_y =y4;
+        int notfine = checkRotate(array, x1, y1, x2, y2, x3, y3, x4, y4);
+            if (notfine) {
+                x1 = x1 - 2*dim;
+                y1 = y1 + 2*dim;
+                x2 = x2-dim;
+                y2 = y2+dim;
+                x3 =  x3;
+                y3 = y3;
+                x4 =  x4+dim;
+                y4 = y4-dim;
+                highest_y = y1;
+            return 1;
+            }
+            return 0;
     }
 };
