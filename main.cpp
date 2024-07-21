@@ -17,6 +17,8 @@ const int BOARD_WIDTH = 280;
 
 bool gameOn =  true;
 bool start = true;
+int score = 0;
+int init_lvl = 0;
 
 const Uint8* keystate;
 using spaces =  int[10][18];
@@ -42,6 +44,7 @@ void setSpaces(spaces& array, int x, int y) {
         }
     }
 }
+
 
 void printSpaces(spaces& array) {
     for (int i = 0; i < 18; ++i) {
@@ -100,7 +103,6 @@ bool movetime = true;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
-    return 6;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -295,6 +297,34 @@ void activeToStop(spaces& array, block b) {
     setSpaces(array, b.x3, b.y3);
     setSpaces(array, b.x4, b.y4);
 }//std::vector<std::array<int, 2>> taken_spaces;
+
+void updatescore(spaces& array, int lvl) {
+    int count = 0;
+    for (int i = 0; i<18; ++i) {
+        int lineFull = checkOneLine(array, i);
+        if (lineFull) {
+            ++count;
+        }
+    }
+    if (!count) {
+        return;
+    }
+    switch (count) {
+        case 1:
+            score = score + 40*(lvl+1);
+            break;
+        case 2:
+            score = score + 100*(lvl+1);
+            break;
+        case 3:
+            score = score + 300*(lvl+1);
+            break;
+        case 4:
+            score = score + 1200*(lvl+1);
+            break;
+    }
+    cout << score << endl;
+}
 int moveActiveBlock(int currentblock) {
     switch (currentblock) {
         case 1:
@@ -624,6 +654,7 @@ int main( int argc, char *argv[] )
             movetime = true;
             }
         }
+        updatescore(SPACES, 0);
         checkAllLines(SPACES);
         drawActiveBlock(currentBlock, renderer);
         drawAllblocks(renderer);
