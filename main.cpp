@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "block.h"
 #include <string>
 #include <stdlib.h>
@@ -44,8 +45,6 @@ void setSpaces(spaces& array, int x, int y) {
         }
     }
 }
-
-
 void printSpaces(spaces& array) {
     for (int i = 0; i < 18; ++i) {
         for (int j = 0; j < 10; ++j) {
@@ -54,7 +53,6 @@ void printSpaces(spaces& array) {
         cout << endl;
     }
 }
-
 
 int checkblockpos(spaces& array, block b) {
     int x1_Update = (b.x1-160)/28;
@@ -132,6 +130,67 @@ std::vector<Iblock> all_I_blocks;
 //O blocks
 std::vector<Oblock> all_O_blocks;
 
+void drawNextBlock(int nextblock, SDL_Renderer *rend) {
+    switch (nextblock) {
+        case 1: 
+            {
+            LRblock NB1 = LRblock(50, 50);
+            NB1.EstablishNorth();
+            NB1.showingNextBlock();
+            NB1.draw(rend);
+            break;
+            }
+        case 2:
+            {
+            LLblock NB2 = LLblock(50, 50);
+            NB2.EstablishNorth();
+            NB2.showingNextBlock();
+            NB2.draw(rend);
+            break;
+            }
+        case 3:
+            {
+            Sblock NB3 = Sblock(50, 50);
+            NB3.EstablishEast();
+            NB3.showingNextBlock();
+            NB3.draw(rend);
+            break;
+            }
+        case 4:
+            {
+            Zblock NB4 = Zblock(50, 50);
+            NB4.EstablishEast();
+            NB4.showingNextBlock();
+            NB4.draw(rend);
+            break;
+            }
+        case 5:
+            {
+            Oblock NB5 = Oblock(50, 50);
+            NB5.Establish();
+            NB5.showingNextBlock();
+            NB5.draw(rend);
+            break;
+            }
+        case 6: 
+            {
+            Iblock NB6 = Iblock(50, 50);
+            NB6.EstablishE();
+            NB6.showingNextBlock();
+            NB6.draw(rend);
+            break;
+            }
+        case 7:
+            {
+            Tblock NB = Tblock(50, 50);
+            NB.EstablishNorth();
+            NB.showingNextBlock();
+            NB.draw(rend);
+            break;
+            }
+        ;
+}
+}
 
 void addToActiveBlocks(int nextblock) {
     switch (nextblock) {
@@ -535,8 +594,10 @@ int main( int argc, char *argv[] )
 {
     SDL_Init( SDL_INIT_EVERYTHING );
 
+    TTF_Init();
+
     SDL_Window *window = SDL_CreateWindow( "poop", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if ( NULL == window )
     {
@@ -545,16 +606,10 @@ int main( int argc, char *argv[] )
     }
     int SPACES[10][18] = {0};
 
-    //L blocks
-    //Iblock first = Iblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-    //Sblock second = Sblock((WIDTH / 2 - BOARD_WIDTH / 2), 10);
-
-    //first.EstablishNS();
-    //first.EstablishNorth();
-    //second.EstablishWest();
-    //second.EstablishEast();
-    //second.EstablishWest();
-    //firstL.EstablishSouth();
+    TTF_Font* pixels = TTF_OpenFont("resources/Pixellettersfull-BnJ5.ttf", 12);
+    SDL_Color textColor = { 255, 255, 255, 255 }; // White color
+     // Position and size of the text
+    
 
     SDL_Rect board = { (WIDTH / 2 - BOARD_WIDTH / 2), 10, BOARD_WIDTH, BOARD_HEIGHT };
     Uint32 lastMoveTime = 0;
@@ -563,7 +618,6 @@ int main( int argc, char *argv[] )
 
 
     SDL_Event windowEvent;
-
     if (gameOn) {
         while ( gameOn )
     {
@@ -611,10 +665,8 @@ int main( int argc, char *argv[] )
         Uint32 currentTime = SDL_GetTicks();
         SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255);
         SDL_RenderClear(renderer);
-
         SDL_SetRenderDrawColor(renderer, 198, 198, 198, 255);
         SDL_RenderFillRect(renderer, &board);
-    
         SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
         for (int i = 0; i<9; i++)
         {
@@ -624,14 +676,14 @@ int main( int argc, char *argv[] )
         {
             SDL_RenderDrawLine(renderer, (WIDTH / 2 - BOARD_WIDTH / 2), 38+28*i, (WIDTH / 2 - BOARD_WIDTH / 2)+BOARD_WIDTH, 38+28*i);
         }  
-
+        cout << nextBlock << endl;
         if (movetime) {
             if (start) {
                 if (!GameOverFlag) {
-                    nextBlock = randomBlockSelect();
                     addToActiveBlocks(nextBlock);
                     currentBlock = nextBlock;
                     start = false;
+                    nextBlock = randomBlockSelect();
                 }
             } else {
                 stoppingFlag = checkActiveBlock(SPACES, currentBlock);
@@ -658,32 +710,19 @@ int main( int argc, char *argv[] )
         checkAllLines(SPACES);
         drawActiveBlock(currentBlock, renderer);
         drawAllblocks(renderer);
-        //SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //
-        /*
-       if (start) {
-                if (!GameOverFlag) {
-                    nextBlock = randomBlockSelect();
-                    addToActiveBlocks(nextBlock);
-                    currentBlock = nextBlock;
-                    start = false;
-                    drawActiveBlock(currentBlock, renderer);
-                }
-            } else {
-                drawActiveBlock(currentBlock, renderer);
-                stoppingFlag = checkActiveBlock(SPACES, currentBlock);
-                GameOverFlag = checkTopLvl(SPACES);
-                if (stoppingFlag) {
-                    start = true;
-                }
-        }
-        if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
-            moveActiveBlock(currentBlock);
-            lastMoveTime = currentTime;
-        }
 
-        checkAllLines(SPACES);
-        drawAllblocks(renderer);
-        */
+        std::string scorechar = std::to_string(score);
+        const char* SC = scorechar.c_str();
+        SDL_Surface* textSurface = TTF_RenderText_Solid(pixels, SC, textColor);
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        int scoreboxlen = 20*strlen(SC);
+        SDL_Rect textRect = { 450, 40, scoreboxlen, 30 };
+        SDL_Rect SBox = {445, 35, 130, 40};
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &SBox);
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+        drawNextBlock(nextBlock, renderer);
         SDL_RenderPresent(renderer);
     }
     } else {
@@ -719,6 +758,7 @@ int main( int argc, char *argv[] )
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow( window );
+    TTF_Quit( );
     SDL_Quit( );
 
     return EXIT_SUCCESS;

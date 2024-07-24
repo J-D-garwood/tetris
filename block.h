@@ -89,6 +89,18 @@ public:
         return 0;
     }
 
+    
+    void showingNextBlock() {
+        x1-=130;
+        x2-=130;
+        x3-=130;
+        x4-=130;
+        y1+=100;
+        y2+=100;
+        y3+=100;
+        y4+=100;
+    }
+
     void rotate(spaces& array) {
         int ok;
         switch (rotation) {
