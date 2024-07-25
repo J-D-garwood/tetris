@@ -101,6 +101,7 @@ bool movetime = true;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
+    return 6;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -382,7 +383,6 @@ void updatescore(spaces& array, int lvl) {
             score = score + 1200*(lvl+1);
             break;
     }
-    cout << score << endl;
 }
 int moveActiveBlock(int currentblock) {
     switch (currentblock) {
@@ -676,7 +676,6 @@ int main( int argc, char *argv[] )
         {
             SDL_RenderDrawLine(renderer, (WIDTH / 2 - BOARD_WIDTH / 2), 38+28*i, (WIDTH / 2 - BOARD_WIDTH / 2)+BOARD_WIDTH, 38+28*i);
         }  
-        cout << nextBlock << endl;
         if (movetime) {
             if (start) {
                 if (!GameOverFlag) {
