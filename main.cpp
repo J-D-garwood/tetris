@@ -18,6 +18,7 @@ const int BOARD_WIDTH = 280;
 
 bool gameOn =  true;
 bool start = true;
+bool blocksAreDying = false;
 int score = 0;
 int init_lvl = 0;
 
@@ -94,6 +95,8 @@ int checkblockpos(spaces& array, block b) {
     return 0;
 }
 Uint32 initial_MI = 200;
+Uint32 dyinginterval = 4000;
+Uint32 lastDieTime = 0;
 Uint32 MOVE_INTERVAL = initial_MI;
 Uint32 SHIFT_INTERVAL = MOVE_INTERVAL/2;
 bool movetime = true;
@@ -101,7 +104,6 @@ bool movetime = true;
 int randomBlockSelect() {
     srand (time(NULL));
     int num = rand() % 7 + 1;
-    return 6;
     return num;
 }
 int currentBlock = randomBlockSelect();
@@ -130,6 +132,16 @@ std::vector<Iblock> all_I_blocks;
 
 //O blocks
 std::vector<Oblock> all_O_blocks;
+
+void killLine(int i) {
+    Uint32 last = 0;
+    Uint32 curr = SDL_GetTicks();
+    while (true) {
+
+    }
+
+
+}
 
 void drawNextBlock(int nextblock, SDL_Renderer *rend) {
     switch (nextblock) {
@@ -283,6 +295,12 @@ void checkAllLines(spaces& array) {
     for (int i = 0; i<18; ++i) {
         int lineFull = checkOneLine(array, i);
         if (lineFull) {
+            if (blocksAreDying) {
+                return;
+            } else {
+                blocksAreDying = true;
+            }
+            lastDieTime = SDL_GetTicks();
             //printSpaces(array);
             //cout<<""<<endl;
             for (int l = 0; l<10; ++l) {
@@ -676,39 +694,46 @@ int main( int argc, char *argv[] )
         {
             SDL_RenderDrawLine(renderer, (WIDTH / 2 - BOARD_WIDTH / 2), 38+28*i, (WIDTH / 2 - BOARD_WIDTH / 2)+BOARD_WIDTH, 38+28*i);
         }  
+        if (!blocksAreDying) {
         if (movetime) {
-            if (start) {
-                if (!GameOverFlag) {
-                    addToActiveBlocks(nextBlock);
-                    currentBlock = nextBlock;
-                    start = false;
-                    nextBlock = randomBlockSelect();
+                if (start) {
+                    if (!GameOverFlag) {
+                        addToActiveBlocks(nextBlock);
+                        currentBlock = nextBlock;
+                        start = false;
+                        nextBlock = randomBlockSelect();
+                    }
+                } else {
+                    stoppingFlag = checkActiveBlock(SPACES, currentBlock);
+                    GameOverFlag = checkTopLvl(SPACES);
+                    if (stoppingFlag) {
+                        start = true;
+                    }
+            }
+            if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
+                moveActiveBlock(currentBlock);
+                lastMoveTime = currentTime;
+                lastMoveTime2 = lastMoveTime;
+                movetime = false;
                 }
+            
             } else {
-                stoppingFlag = checkActiveBlock(SPACES, currentBlock);
-                GameOverFlag = checkTopLvl(SPACES);
-                if (stoppingFlag) {
-                    start = true;
+                if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
+                lastMoveTime2 = currentTime;
+                lastMoveTime = lastMoveTime2;
+                movetime = true;
                 }
-        }
-        if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
-            moveActiveBlock(currentBlock);
-            lastMoveTime = currentTime;
-            lastMoveTime2 = lastMoveTime;
-            movetime = false;
             }
-        
+            updatescore(SPACES, 0);
+            drawActiveBlock(currentBlock, renderer);
+            drawAllblocks(renderer);
+            checkAllLines(SPACES);
         } else {
-            if (currentTime - lastMoveTime2 >= SHIFT_INTERVAL) {
-            lastMoveTime2 = currentTime;
-            lastMoveTime = lastMoveTime2;
-            movetime = true;
-            }
+            if (currentTime - lastDieTime >= dyinginterval) {
+                blocksAreDying = false;
+                }
+            drawAllblocks(renderer);
         }
-        updatescore(SPACES, 0);
-        checkAllLines(SPACES);
-        drawActiveBlock(currentBlock, renderer);
-        drawAllblocks(renderer);
 
         std::string scorechar = std::to_string(score);
         const char* SC = scorechar.c_str();
