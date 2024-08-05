@@ -21,9 +21,11 @@ bool start = true;
 bool blocksAreDying = false;
 int score = 0;
 int init_lvl = 0;
+int updown = 1;
 
 const Uint8* keystate;
 using spaces =  int[10][18];
+using LTBR = int[18];
 int stoppingFlag = 0;
 int GameOverFlag = 0;
 int checkTopLvl(spaces& array) {
@@ -290,16 +292,12 @@ bool blockToBeRemoved(block b, int Yval) {
     return b.y1==Yval;
 }
 
-void checkAllLines(spaces& array) {
-
+int checkAllLines(spaces& array, LTBR& linesToBeRem) {
+    int counter = 0;
     for (int i = 0; i<18; ++i) {
         int lineFull = checkOneLine(array, i);
         if (lineFull) {
-            if (blocksAreDying) {
-                return;
-            } else {
-                blocksAreDying = true;
-            }
+            counter++;
             lastDieTime = SDL_GetTicks();
             //printSpaces(array);
             //cout<<""<<endl;
@@ -319,7 +317,10 @@ void checkAllLines(spaces& array) {
                 }
                 --del;
             }
+            linesToBeRem[i] = 1;
             int yEquiv = (i*28)+10;
+            //return yEquiv;
+            /*
             auto condition = [yEquiv](block b) {
                 return b.y1 == yEquiv;
             };
@@ -337,10 +338,62 @@ void checkAllLines(spaces& array) {
             }
             all_blocks = new_all_blocks;
             //printSpaces(array);
-
+            */
+        } else {
+            linesToBeRem[i] = 0;
         }
+        }
+        if (counter>0) {
+            return 1;
+        }
+        return 0;
+    }
+
+    void drawDyingBlocks(LTBR& linestoberem, int updown, SDL_Renderer *rend ) {
+        for (int i=0; i<18; i++) {
+            if (linestoberem[i]==1) {
+                int yEquiv = (i*28)+10;
+                OpCondition(updown, yEquiv, rend);
+            }
         }
     }
+
+    void OpCondition(int updown, int yEquiv, SDL_Renderer *rend ) {
+    for (auto& bloc : all_blocks) {
+        if (bloc.y1 == yEquiv) {
+            if (updown) {
+                bloc.DisappearA(rend);
+            } else {
+                bloc.DisappearB(rend);
+            }
+        }
+    }
+}
+
+    void removeKilledBlocks(LTBR& linestoberem) {
+        for (int i=0; i<18; i++) {
+            if (linestoberem[i]==1) {
+            int yEquiv = (i*28)+10;
+            auto condition = [yEquiv](block b) {
+                return b.y1 == yEquiv;
+            };
+            auto new_end = std::remove_if(all_blocks.begin(), all_blocks.end(), condition);
+            all_blocks.erase(new_end, all_blocks.end());
+            std::vector<block> new_all_blocks;
+            for (block b: all_blocks) {
+                if (b.y1<yEquiv) {
+                    block b2 = b;
+                    b2.moveSingle();
+                    new_all_blocks.push_back(b2);
+                } else {
+                    new_all_blocks.push_back(b);
+                }
+            }
+            all_blocks = new_all_blocks;
+            }
+        }
+    }
+
 int drawActiveBlock(int currentblock ,SDL_Renderer *rend) {
     switch (currentblock) {
         case 1:
@@ -623,6 +676,7 @@ int main( int argc, char *argv[] )
         return 1;
     }
     int SPACES[10][18] = {0};
+    int linesToBeRemoved[18] = {0};
 
     TTF_Font* pixels = TTF_OpenFont("resources/Pixellettersfull-BnJ5.ttf", 12);
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
@@ -727,11 +781,14 @@ int main( int argc, char *argv[] )
             updatescore(SPACES, 0);
             drawActiveBlock(currentBlock, renderer);
             drawAllblocks(renderer);
-            checkAllLines(SPACES);
+            blocksAreDying = checkAllLines(SPACES, linesToBeRemoved);
         } else {
             if (currentTime - lastDieTime >= dyinginterval) {
+                removeKilledBlocks(linesToBeRemoved);
                 blocksAreDying = false;
                 }
+            if (currentTime - lastswitchtime) >=
+            drawDyingBlocks(linesToBeRemoved, updown, renderer);
             drawAllblocks(renderer);
         }
 
