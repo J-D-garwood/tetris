@@ -25,6 +25,7 @@ public:
     int y4;
     int type;
     int rotation;// 1 = north, 2 = east, 3 = south, 4 = west
+    int dying = false;
     using spaces =  int[10][18];
     block(int x_pos, int y_pos, bool stop = false, int t = 0) {
         x1 = x_pos;
@@ -259,13 +260,31 @@ public:
     void moveSingle() {
         y1 += dim;
     }
-    void drawSingle(SDL_Renderer *rend ) {
+    void drawSingle(SDL_Renderer *rend, bool inout) {
+        if (dying) {
+            if (inout) {
+                SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+                SDL_Rect A = {x1, y1, dim, dim};
+                SDL_Rect E = {x1+1, y1+1, 26, 26};
+                SDL_RenderFillRect(rend, &A);
+                innerBoxCol(rend, type);
+                SDL_RenderFillRect(rend, &E);
+            } else {
+                SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+                SDL_Rect A = {x1, y1, dim, dim};
+                SDL_Rect E = {x1+1, y1+1, 26, 26};
+                SDL_RenderFillRect(rend, &A);
+                SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+                SDL_RenderFillRect(rend, &E);
+            }
+        } else {
         SDL_Rect A = {x1, y1, dim, dim};
         SDL_Rect E = {x1+1, y1+1, 26, 26};
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderFillRect(rend, &A);
         innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &E);
+        }
     }
 
     void draw(SDL_Renderer *rend ) {
@@ -303,39 +322,17 @@ public:
         } 
     }
 
+    void markForDeath() {
+        dying = true;
+    }
+
     void DisappearA(SDL_Renderer *rend ) {
         SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-        if (y1>=10) {
         SDL_Rect A = {x1, y1, dim, dim};
         SDL_Rect E = {x1+1, y1+1, 26, 26};
         SDL_RenderFillRect(rend, &A);
         innerBoxCol(rend, type);
         SDL_RenderFillRect(rend, &E);
-        } 
-        SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-        if (y2>=10) {
-        SDL_Rect B = {x2, y2, dim, dim};
-        SDL_Rect F = {x2+1, y2+1, 26, 26};
-        SDL_RenderFillRect(rend, &B);
-        innerBoxCol(rend, type);
-        SDL_RenderFillRect(rend, &F);
-        } 
-        SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-        if (y3>=10) {
-        SDL_Rect C = {x3, y3, dim, dim};
-        SDL_Rect G = {x3+1, y3+1, 26, 26};
-        SDL_RenderFillRect(rend, &C);
-        innerBoxCol(rend, type);
-        SDL_RenderFillRect(rend, &G);
-        } 
-        SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-        if (y4>=10) {
-        SDL_Rect D = {x4, y4, dim, dim};
-        SDL_Rect H = {x4+1, y4+1, 26, 26};
-        SDL_RenderFillRect(rend, &D);
-        innerBoxCol(rend, type);
-        SDL_RenderFillRect(rend, &H);
-        } 
     }
 
     void DisappearB(SDL_Renderer *rend ) {

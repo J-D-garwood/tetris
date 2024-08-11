@@ -97,7 +97,9 @@ int checkblockpos(spaces& array, block b) {
     return 0;
 }
 Uint32 initial_MI = 200;
-Uint32 dyinginterval = 4000;
+Uint32 dyinginterval = 300;
+Uint32 switchingintervalA = 30;
+Uint32 switchingintervalB = 70;
 Uint32 lastDieTime = 0;
 Uint32 MOVE_INTERVAL = initial_MI;
 Uint32 SHIFT_INTERVAL = MOVE_INTERVAL/2;
@@ -319,6 +321,15 @@ int checkAllLines(spaces& array, LTBR& linesToBeRem) {
             }
             linesToBeRem[i] = 1;
             int yEquiv = (i*28)+10;
+            int count = 0;
+            while (count<19) {
+                for (size_t i = 0; i < all_blocks.size(); ++i) {
+                    if (all_blocks[i].y1==yEquiv) {
+                        all_blocks[i].markForDeath();
+                        count++;
+                    }
+                }
+            }
             //return yEquiv;
             /*
             auto condition = [yEquiv](block b) {
@@ -349,15 +360,6 @@ int checkAllLines(spaces& array, LTBR& linesToBeRem) {
         return 0;
     }
 
-    void drawDyingBlocks(LTBR& linestoberem, int updown, SDL_Renderer *rend ) {
-        for (int i=0; i<18; i++) {
-            if (linestoberem[i]==1) {
-                int yEquiv = (i*28)+10;
-                OpCondition(updown, yEquiv, rend);
-            }
-        }
-    }
-
     void OpCondition(int updown, int yEquiv, SDL_Renderer *rend ) {
     for (auto& bloc : all_blocks) {
         if (bloc.y1 == yEquiv) {
@@ -369,6 +371,14 @@ int checkAllLines(spaces& array, LTBR& linesToBeRem) {
         }
     }
 }
+   /* void drawDyingBlocks(LTBR& linestoberem, int updown, SDL_Renderer *rend ) {
+        for (int i=0; i<18; i++) {
+            if (linestoberem[i]==1) {
+                int yEquiv = (i*28)+10;
+                OpCondition(updown, yEquiv, rend);
+            }
+        }
+    }*/
 
     void removeKilledBlocks(LTBR& linestoberem) {
         for (int i=0; i<18; i++) {
@@ -655,9 +665,9 @@ int checkActiveBlock(spaces& array, int currentblock) {
     }
     return stopFlag;
 }
-void drawAllblocks(SDL_Renderer *rend) {
+void drawAllblocks(SDL_Renderer *rend, bool updown) {
     for (block b : all_blocks) {
-        b.drawSingle(rend);
+        b.drawSingle(rend, updown);
     }
 }
 
@@ -686,6 +696,9 @@ int main( int argc, char *argv[] )
     SDL_Rect board = { (WIDTH / 2 - BOARD_WIDTH / 2), 10, BOARD_WIDTH, BOARD_HEIGHT };
     Uint32 lastMoveTime = 0;
     Uint32 lastMoveTime2 = 0;
+    Uint32 lastswitchtimeA = 0;
+    Uint32 lastswitchtimeB = 0;
+
 
 
 
@@ -780,16 +793,27 @@ int main( int argc, char *argv[] )
             }
             updatescore(SPACES, 0);
             drawActiveBlock(currentBlock, renderer);
-            drawAllblocks(renderer);
+            drawAllblocks(renderer, 0);
             blocksAreDying = checkAllLines(SPACES, linesToBeRemoved);
         } else {
+            bool iminlovewithyou = false;
             if (currentTime - lastDieTime >= dyinginterval) {
                 removeKilledBlocks(linesToBeRemoved);
                 blocksAreDying = false;
+            } else {
+                if (currentTime - lastswitchtimeA >= switchingintervalA) {
+                    iminlovewithyou = !iminlovewithyou;
+                    lastswitchtimeA = currentTime;
+                    lastswitchtimeB = lastswitchtimeA;
+                } else {
+                    if (currentTime - lastswitchtimeB >= switchingintervalB) {
+                    lastswitchtimeB = currentTime;
+                    lastswitchtimeA = lastswitchtimeB;
+                    iminlovewithyou = !iminlovewithyou;
+                    }
                 }
-            if (currentTime - lastswitchtime) >=
-            drawDyingBlocks(linesToBeRemoved, updown, renderer);
-            drawAllblocks(renderer);
+            }
+            drawAllblocks(renderer, iminlovewithyou);
         }
 
         std::string scorechar = std::to_string(score);
